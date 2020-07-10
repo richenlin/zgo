@@ -1,0 +1,19 @@
+basePath: /
+info:
+  contact:
+    email: susirc@outlook.com
+    name: suisrc
+  description: GIN + ENT/SQLX + CASBIN + WIRE
+  license: {}
+  title: zgo
+  version: 0.0.1
+paths: {}
+schemes:
+- http
+- https
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

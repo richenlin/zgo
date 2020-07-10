@@ -1,159 +1,210 @@
-// Copyright 2020 Kratos Team. All rights reserved.
-// Use of this source code is governed by a Apache-2.0 style
-// license that can be found in the LICENSE file.
-
 package config
 
 import (
 	"encoding/json"
+	"fmt"
+	"os"
+	"strings"
+	"sync"
+
+	"github.com/koding/multiconfig"
 )
 
-// Database is a type of database connection config.
-//
-// Because a little difference of different database driver.
-// The Config has multiple options but may not be used.
-// Such as the sqlite driver only use the File option which
-// can be ignored when the driver is mysql.
-//
-// If the Dsn is configured, when driver is mysql/postgresql/
-// mssql, the other configurations will be ignored, except for
-// MaxIdleCon and MaxOpenCon.
-type Database struct {
-	Host       string `json:"host,omitempty" yaml:"host,omitempty" ini:"host,omitempty"`
-	Port       string `json:"port,omitempty" yaml:"port,omitempty" ini:"port,omitempty"`
-	User       string `json:"user,omitempty" yaml:"user,omitempty" ini:"user,omitempty"`
-	Pwd        string `json:"pwd,omitempty" yaml:"pwd,omitempty" ini:"pwd,omitempty"`
-	Name       string `json:"name,omitempty" yaml:"name,omitempty" ini:"name,omitempty"`
-	MaxIdleCon int    `json:"max_idle_con,omitempty" yaml:"max_idle_con,omitempty" ini:"max_idle_con,omitempty"`
-	MaxOpenCon int    `json:"max_open_con,omitempty" yaml:"max_open_con,omitempty" ini:"max_open_con,omitempty"`
-	Driver     string `json:"driver,omitempty" yaml:"driver,omitempty" ini:"driver,omitempty"`
-	File       string `json:"file,omitempty" yaml:"file,omitempty" ini:"file,omitempty"`
-	Dsn        string `json:"dsn,omitempty" yaml:"dsn,omitempty" ini:"dsn,omitempty"`
-}
-
-// DatabaseList is a map of Database.
-type DatabaseList map[string]Database
-
-// GetDefault get the default Database.
-func (d DatabaseList) GetDefault() Database {
-	return d["default"]
-}
-
-// Add add a Database to the DatabaseList.
-func (d DatabaseList) Add(key string, db Database) {
-	d[key] = db
-}
-
-// GroupByDriver group the Databases with the drivers.
-func (d DatabaseList) GroupByDriver() map[string]DatabaseList {
-	drivers := make(map[string]DatabaseList)
-	for key, item := range d {
-		if driverList, ok := drivers[item.Driver]; ok {
-			driverList.Add(key, item)
-		} else {
-			drivers[item.Driver] = make(DatabaseList)
-			drivers[item.Driver].Add(key, item)
-		}
-	}
-	return drivers
-}
-
-func (d DatabaseList) JSON() string {
-	return utils.JSON(d)
-}
-
-func (d DatabaseList) Copy() DatabaseList {
-	var c = make(DatabaseList)
-	for k, v := range d {
-		c[k] = v
-	}
-	return c
-}
-
-func (d DatabaseList) Connections() []string {
-	conns := make([]string, len(d))
-	count := 0
-	for key := range d {
-		conns[count] = key
-		count++
-	}
-	return conns
-}
-
-func GetDatabaseListFromJSON(m string) DatabaseList {
-	var d = make(DatabaseList, 0)
-	if m == "" {
-		panic("wrong config")
-	}
-	_ = json.Unmarshal([]byte(m), &d)
-	return d
-}
-
-const (
-	// EnvTest is a const value of test environment.
-	EnvTest = "test"
-	// EnvLocal is a const value of local environment.
-	EnvLocal = "local"
-	// EnvProd is a const value of production environment.
-	EnvProd = "prod"
-
-	// DriverMysql is a const value of mysql driver.
-	DriverMysql = "mysql"
-	// DriverSqlite is a const value of sqlite driver.
-	DriverSqlite = "sqlite"
-	// DriverPostgresql is a const value of postgresql driver.
-	DriverPostgresql = "postgresql"
-	// DriverMssql is a const value of mssql driver.
-	DriverMssql = "mssql"
+var (
+	// C 全局配置(需要先执行MustLoad，否则拿不到配置)
+	C    = new(Config)
+	once sync.Once
 )
 
-// Store is the file store config. Path is the local store path.
-// and prefix is the url prefix used to visit it.
-type Store struct {
-	Path   string `json:"path,omitempty" yaml:"path,omitempty" ini:"path,omitempty"`
-	Prefix string `json:"prefix,omitempty" yaml:"prefix,omitempty" ini:"prefix,omitempty"`
+// MustLoad 加载配置
+func MustLoad(fpaths ...string) {
+	once.Do(func() {
+		loaders := []multiconfig.Loader{
+			&multiconfig.TagLoader{},
+			&multiconfig.EnvironmentLoader{},
+		}
+
+		for _, fpath := range fpaths {
+			//if strings.HasSuffix(fpath, "ini") {
+			//	loaders = append(loaders, &multiconfig.INILLoader{Path: fpath})
+			//}
+			if strings.HasSuffix(fpath, "toml") {
+				loaders = append(loaders, &multiconfig.TOMLLoader{Path: fpath})
+			}
+			if strings.HasSuffix(fpath, "json") {
+				loaders = append(loaders, &multiconfig.JSONLoader{Path: fpath})
+			}
+			if strings.HasSuffix(fpath, "yaml") {
+				loaders = append(loaders, &multiconfig.YAMLLoader{Path: fpath})
+			}
+		}
+
+		m := multiconfig.DefaultLoader{
+			Loader:    multiconfig.MultiLoader(loaders...),
+			Validator: multiconfig.MultiValidator(&multiconfig.RequiredValidator{}),
+		}
+		// 加载默认值
+		LoadConfigDefault(C)
+		// 加载配置
+		m.MustLoad(C)
+	})
 }
 
-func (s Store) URL(suffix string) string {
-	if len(suffix) > 4 && suffix[:4] == "http" {
-		return suffix
-	}
-	if s.Prefix == "" {
-		if suffix[0] == '/' {
-			return suffix
-		}
-		return "/" + suffix
-	}
-	if s.Prefix[0] == '/' {
-		if suffix[0] == '/' {
-			return s.Prefix + suffix
-		}
-		return s.Prefix + "/" + suffix
-	}
-	if suffix[0] == '/' {
-		if len(s.Prefix) > 4 && s.Prefix[:4] == "http" {
-			return s.Prefix + suffix
-		}
-		return "/" + s.Prefix + suffix
-	}
-	if len(s.Prefix) > 4 && s.Prefix[:4] == "http" {
-		return s.Prefix + "/" + suffix
-	}
-	return "/" + s.Prefix + "/" + suffix
+// LoadConfigDefault 加载默认值
+func LoadConfigDefault(conf *Config) {
+	conf.RunMode = "release"
+	conf.HTTP.Host = "0.0.0.0"
+	conf.HTTP.Port = 80
+	conf.Logging.Level = "info"
+	conf.Logging.SyslogNetwork = "udp"
+
 }
 
-func (s Store) JSON() string {
-	if s.Path == "" && s.Prefix == "" {
-		return ""
+// PrintWithJSON 基于JSON格式输出配置
+func PrintWithJSON() {
+	if C.PrintConfig {
+		b, err := json.MarshalIndent(C, "", " ")
+		if err != nil {
+			os.Stdout.WriteString("[CONFIG] JSON marshal error: " + err.Error())
+			return
+		}
+		os.Stdout.WriteString(string(b) + "\n")
 	}
-	return utils.JSON(s)
 }
 
-func GetStoreFromJSON(m string) Store {
-	var s Store
-	if m == "" {
-		return s
+// Config 配置参数
+type Config struct {
+	RunMode     string
+	Swagger     bool
+	PrintConfig bool
+	HTTP        HTTP
+	Logging     Logging
+	UniqueID    struct {
+		Type      string
+		Snowflake struct {
+			Node  int64
+			Epoch int64
+		}
 	}
-	_ = json.Unmarshal([]byte(m), &s)
-	return s
+}
+
+// IsDebugMode 是否是debug模式
+func (c *Config) IsDebugMode() bool {
+	return c.RunMode == "debug"
+}
+
+// Casbin casbin配置参数
+type Casbin struct {
+	Enable           bool
+	Debug            bool
+	Model            string
+	AutoLoad         bool
+	AutoLoadInternal int
+}
+
+// Logging 日志配置参数
+type Logging struct {
+	Level            string
+	Format           string // json | text
+	Output           string
+	OutputFile       string
+	EnableSyslogHook bool
+	SyslogNetwork    string
+	SyslogAddr       string
+	SyslogTag        string
+	//SyslogPriority   int
+}
+
+// JWTAuth 用户认证
+type JWTAuth struct {
+	Enable        bool
+	SigningMethod string
+	SigningKey    string
+	Expired       int
+	Store         string
+	FilePath      string
+	RedisDB       int
+	RedisPrefix   string
+}
+
+// HTTP http配置参数
+type HTTP struct {
+	Host             string `yaml:"zgo,http,host"`
+	Port             int    `yaml:"zgo,http,port"`
+	CertFile         string
+	KeyFile          string
+	ShutdownTimeout  int
+	MaxContentLength int64
+}
+
+// RateLimiter 请求频率限制配置参数
+type RateLimiter struct {
+	Enable  bool
+	Count   int64
+	RedisDB int
+}
+
+// CORS 跨域请求配置参数
+type CORS struct {
+	Enable           bool
+	AllowOrigins     []string
+	AllowMethods     []string
+	AllowHeaders     []string
+	AllowCredentials bool
+	MaxAge           int
+}
+
+// GZIP gzip压缩
+type GZIP struct {
+	Enable             bool
+	ExcludedExtentions []string
+	ExcludedPaths      []string
+}
+
+// Redis redis配置参数
+type Redis struct {
+	Addr     string
+	Password string
+}
+
+// MySQL mysql配置参数
+type MySQL struct {
+	Host       string
+	Port       int
+	User       string
+	Password   string
+	DBName     string
+	Parameters string
+}
+
+// DSN 数据库连接串
+func (a MySQL) DSN() string {
+	return fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?%s",
+		a.User, a.Password, a.Host, a.Port, a.DBName, a.Parameters)
+}
+
+// Postgres postgres配置参数
+type Postgres struct {
+	Host     string
+	Port     int
+	User     string
+	Password string
+	DBName   string
+	SSLMode  string
+}
+
+// DSN 数据库连接串
+func (a Postgres) DSN() string {
+	return fmt.Sprintf("host=%s port=%d user=%s dbname=%s password=%s sslmode=%s",
+		a.Host, a.Port, a.User, a.DBName, a.Password, a.SSLMode)
+}
+
+// Sqlite3 sqlite3配置参数
+type Sqlite3 struct {
+	Path string
+}
+
+// DSN 数据库连接串
+func (a Sqlite3) DSN() string {
+	return a.Path
 }

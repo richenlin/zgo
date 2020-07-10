@@ -1,0 +1,25 @@
+# 运行模式(debug:调试,test:测试,release:正式)
+RunMode = "debug"
+
+# 静态站点目录(也可以启动服务时使用-www指定)
+WWW = ""
+
+# 是否启用swagger
+Swagger = true
+
+# 启动时是否打印配置参数
+PrintConfig = true
+
+[HTTP]
+# http监听地址
+Host = "0.0.0.0"
+# http监听端口
+Port = 8081
+# 证书路径
+CertFile = ""
+# 证书密钥
+KeyFile = ""
+# http优雅关闭等待超时时长(单位秒)
+ShutdownTimeout = 30
+# 允许的最大内容长度(64M)
+MaxContentLength = 67108864

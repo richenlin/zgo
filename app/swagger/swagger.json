@@ -1,0 +1,26 @@
+{
+    "schemes": [
+        "http",
+        "https"
+    ],
+    "swagger": "2.0",
+    "info": {
+        "description": "GIN + ENT/SQLX + CASBIN + WIRE",
+        "title": "zgo",
+        "contact": {
+            "name": "suisrc",
+            "email": "susirc@outlook.com"
+        },
+        "license": {},
+        "version": "0.0.1"
+    },
+    "basePath": "/",
+    "paths": {},
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    }
+}
