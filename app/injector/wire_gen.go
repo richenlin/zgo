@@ -6,21 +6,26 @@
 package injector
 
 import (
+	"github.com/google/wire"
 	"zgo/engine"
 	"zgo/engine/gin"
-
-	"github.com/google/wire"
+	"zgo/modules/router"
 )
 
 // Injectors from wire.go:
 
 func BuildInjector() (*Injector, func(), error) {
-	webFrameWork, err := gin.InitWebFrameWork()
+	webFramework, err := gin.InitWebFramework()
 	if err != nil {
 		return nil, nil, err
 	}
+	rootRouter := router.NewRootRouter(webFramework)
+	helloAPI := router.NewHelloAPI(rootRouter)
+	demoAPI := router.NewDemoAPI(rootRouter)
 	injector := &Injector{
-		EngineFunc: webFrameWork,
+		Engine:   webFramework,
+		HelloAPI: helloAPI,
+		DemoAPI:  demoAPI,
 	}
 	return injector, func() {
 	}, nil
@@ -33,5 +38,7 @@ var InjectorSet = wire.NewSet(wire.Struct(new(Injector), "*"))
 
 // Injector 注入器(用于初始化完成之后的引用)
 type Injector struct {
-	EngineFunc engine.IEngine
+	Engine   engine.IEngine
+	HelloAPI router.HelloAPI
+	DemoAPI  router.DemoAPI
 }

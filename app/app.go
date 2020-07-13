@@ -62,7 +62,7 @@ func Init(ctx context.Context, opts ...Option) (func(), error) {
 	}
 
 	// 初始化HTTP服务
-	httpServerCleanFunc := engine.InitHTTPServer(ctx, injector.EngineFunc.RunHandler())
+	httpServerCleanFunc := engine.InitHTTPServer(ctx, injector.Engine.RunHandler())
 
 	return func() {
 		httpServerCleanFunc()

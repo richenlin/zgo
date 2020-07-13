@@ -5,50 +5,24 @@ import (
 	"net/http"
 	"strings"
 	"zgo/engine"
-
-	"github.com/google/wire"
 )
 
-var _ IRouter = (*Router)(nil)
+// RootRouter 根路由路由
+type RootRouter engine.IRouter
 
-// RouterSet 注入router
-var RouterSet = wire.NewSet(wire.Struct(new(Router), "*"), wire.Bind(new(IRouter), new(*Router)))
-
-// IRouter 注册路由
-type IRouter interface {
-	Register() error
-	Prefixes() []string
-}
-
-// Router 路由管理器
-type Router struct {
-
-	//LoginAPI       *api.Login
-	//MenuAPI        *api.Menu
-	//RoleAPI        *api.Role
-	//UserAPI        *api.User
-}
-
-// Register 注册路由
-func (a *Router) Register() error {
-	a.RegisterAPI(app)
-	return nil
-}
-
-// Prefixes 路由前缀列表
-func (a *Router) Prefixes() []string {
-	return []string{
-		"/api/",
-	}
+// NewRootRouter 新建根路由
+func NewRootRouter(engine engine.IEngine) RootRouter {
+	//engine.Use(Cors())
+	return engine.Group("api")
 }
 
 // Cors 跨域
 func Cors() engine.HandlerFunc {
-	return func(c *engine.Context) {
-		method := c.Request.Method               //请求方法
-		origin := c.Request.Header.Get("Origin") //请求头部
-		var headerKeys []string                  // 声明请求头keys
-		for _, k := range c.Request.Header {
+	return func(c engine.IContext) {
+		method := c.RequestMethod()     //请求方法
+		origin := c.GetHeader("Origin") //请求头部
+		var headerKeys []string         // 声明请求头keys
+		for k := range c.RequestHeader() {
 			headerKeys = append(headerKeys, k)
 		}
 		headerStr := strings.Join(headerKeys, ", ")
@@ -58,7 +32,7 @@ func Cors() engine.HandlerFunc {
 			headerStr = "access-control-allow-origin, access-control-allow-headers"
 		}
 		if origin != "" {
-			c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+			//c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 			// 这是允许访问所有域
 			c.Header("Access-Control-Allow-Origin", "*")
 			//服务器支持的所有跨域请求的方法,为了避免浏览次请求的多次'预检'请求

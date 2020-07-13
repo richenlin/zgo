@@ -15,9 +15,7 @@ import (
 
 var _ engine.IEngine = (*WebFramework)(nil)
 
-//var _ engine.Context = &WebContext{}
-var _ engine.Context = (*gin.Context)(nil)
-
+var _ engine.IContext = &WebContext{}
 var _ engine.IRouter = &WebRouter{}
 var _ engine.IRoutes = &WebRoutes{}
 
@@ -34,9 +32,9 @@ func InitWebFramework() (*WebFramework, error) {
 	// 默认
 	engine.Use(gin.Logger(), gin.Recovery())
 
-	return &WebFramework{
-		target: engine,
-	}, nil
+	result := new(WebFramework)
+	result.target = engine
+	return result, nil
 }
 
 //========================================================= 分割线
@@ -46,12 +44,6 @@ func InitWebFramework() (*WebFramework, error) {
 // WebFramework web框架
 type WebFramework struct {
 	WebRouter
-	target *gin.Engine
-}
-
-// getTarget target
-func (that *WebFramework) getTarget() *gin.Engine {
-	return that.target
 }
 
 // Name web框架的名称
@@ -61,12 +53,12 @@ func (that *WebFramework) Name() string {
 
 // Run 运行服务器
 func (that *WebFramework) Run(addr ...string) error {
-	return that.target.Run(addr...)
+	return that.target.(*gin.Engine).Run(addr...)
 }
 
 // RunHandler 获取服务器句柄
 func (that *WebFramework) RunHandler() http.Handler {
-	return that.target
+	return that.target.(*gin.Engine)
 }
 
 //========================================================= 分割线
@@ -76,21 +68,17 @@ func (that *WebFramework) RunHandler() http.Handler {
 // WebRouter router
 type WebRouter struct {
 	WebRoutes
-	target gin.IRouter
-}
-
-// getTarget target
-func (that *WebRouter) getTarget() gin.IRouter {
-	return that.target
 }
 
 // Group 路由分组
-func (that *WebRouter) Group(relativePath string, handler engine.HandlerFunc) engine.IRouter {
-	router := that.getTarget().Group(relativePath, ConvertHandlerFunc(handler))
-	if that.getTarget() == router {
+func (that *WebRouter) Group(relativePath string, handlers ...engine.HandlerFunc) engine.IRouter {
+	router := that.target.(gin.IRouter).Group(relativePath, ConvertHandlerFunc(handlers)...)
+	if that.target == router {
 		return that
 	}
-	return &WebRouter{target: router}
+	result := new(WebRouter)
+	result.target = router
+	return result
 }
 
 //========================================================= 分割线
@@ -99,100 +87,98 @@ func (that *WebRouter) Group(relativePath string, handler engine.HandlerFunc) en
 
 // WebRoutes routes
 type WebRoutes struct {
-	target gin.IRoutes
-}
-
-// getTarget target
-func (that *WebRoutes) getTarget() gin.IRoutes {
-	return that.target
+	//target gin.IRoutes
+	target interface{}
 }
 
 // newRoutes routes
 func (that *WebRoutes) newRoutes(routes gin.IRoutes) engine.IRoutes {
-	if that.getTarget() == routes {
+	if that.target == routes {
 		return that
 	}
-	return &WebRoutes{target: routes}
+	result := new(WebRouter)
+	result.target = routes
+	return result
 }
 
 // Use use
-func (that *WebRoutes) Use(middleware engine.HandlerFunc) engine.IRoutes {
-	routes := that.getTarget().Use(ConvertHandlerFunc(middleware))
+func (that *WebRoutes) Use(middleware ...engine.HandlerFunc) engine.IRoutes {
+	routes := that.target.(gin.IRoutes).Use(ConvertHandlerFunc(middleware)...)
 	return that.newRoutes(routes)
 }
 
 // Handle handle
-func (that *WebRoutes) Handle(httpMethod string, relativePath string, handler engine.HandlerFunc) engine.IRoutes {
-	routes := that.getTarget().Handle(httpMethod, relativePath, ConvertHandlerFunc(handler))
+func (that *WebRoutes) Handle(httpMethod string, relativePath string, handlers ...engine.HandlerFunc) engine.IRoutes {
+	routes := that.target.(gin.IRoutes).Handle(httpMethod, relativePath, ConvertHandlerFunc(handlers)...)
 	return that.newRoutes(routes)
 }
 
 // Any any
-func (that *WebRoutes) Any(relativePath string, handler engine.HandlerFunc) engine.IRoutes {
-	routes := that.getTarget().Any(relativePath, ConvertHandlerFunc(handler))
+func (that *WebRoutes) Any(relativePath string, handlers ...engine.HandlerFunc) engine.IRoutes {
+	routes := that.target.(gin.IRoutes).Any(relativePath, ConvertHandlerFunc(handlers)...)
 	return that.newRoutes(routes)
 }
 
 // GET get
-func (that *WebRoutes) GET(relativePath string, handler engine.HandlerFunc) engine.IRoutes {
-	routes := that.getTarget().GET(relativePath, ConvertHandlerFunc(handler))
+func (that *WebRoutes) GET(relativePath string, handlers ...engine.HandlerFunc) engine.IRoutes {
+	routes := that.target.(gin.IRoutes).GET(relativePath, ConvertHandlerFunc(handlers)...)
 	return that.newRoutes(routes)
 }
 
 // POST post
-func (that *WebRoutes) POST(relativePath string, handler engine.HandlerFunc) engine.IRoutes {
-	routes := that.getTarget().POST(relativePath, ConvertHandlerFunc(handler))
+func (that *WebRoutes) POST(relativePath string, handlers ...engine.HandlerFunc) engine.IRoutes {
+	routes := that.target.(gin.IRoutes).POST(relativePath, ConvertHandlerFunc(handlers)...)
 	return that.newRoutes(routes)
 }
 
 // DELETE delete
-func (that *WebRoutes) DELETE(relativePath string, handler engine.HandlerFunc) engine.IRoutes {
-	routes := that.getTarget().DELETE(relativePath, ConvertHandlerFunc(handler))
+func (that *WebRoutes) DELETE(relativePath string, handlers ...engine.HandlerFunc) engine.IRoutes {
+	routes := that.target.(gin.IRoutes).DELETE(relativePath, ConvertHandlerFunc(handlers)...)
 	return that.newRoutes(routes)
 }
 
 // PATCH patch
-func (that *WebRoutes) PATCH(relativePath string, handler engine.HandlerFunc) engine.IRoutes {
-	routes := that.getTarget().PATCH(relativePath, ConvertHandlerFunc(handler))
+func (that *WebRoutes) PATCH(relativePath string, handlers ...engine.HandlerFunc) engine.IRoutes {
+	routes := that.target.(gin.IRoutes).PATCH(relativePath, ConvertHandlerFunc(handlers)...)
 	return that.newRoutes(routes)
 }
 
 // PUT put
-func (that *WebRoutes) PUT(relativePath string, handler engine.HandlerFunc) engine.IRoutes {
-	routes := that.getTarget().PUT(relativePath, ConvertHandlerFunc(handler))
+func (that *WebRoutes) PUT(relativePath string, handlers ...engine.HandlerFunc) engine.IRoutes {
+	routes := that.target.(gin.IRoutes).PUT(relativePath, ConvertHandlerFunc(handlers)...)
 	return that.newRoutes(routes)
 }
 
 // OPTIONS options
-func (that *WebRoutes) OPTIONS(relativePath string, handler engine.HandlerFunc) engine.IRoutes {
-	routes := that.getTarget().OPTIONS(relativePath, ConvertHandlerFunc(handler))
+func (that *WebRoutes) OPTIONS(relativePath string, handlers ...engine.HandlerFunc) engine.IRoutes {
+	routes := that.target.(gin.IRoutes).OPTIONS(relativePath, ConvertHandlerFunc(handlers)...)
 	return that.newRoutes(routes)
 }
 
 // HEAD head
-func (that *WebRoutes) HEAD(relativePath string, handler engine.HandlerFunc) engine.IRoutes {
-	routes := that.getTarget().HEAD(relativePath, ConvertHandlerFunc(handler))
+func (that *WebRoutes) HEAD(relativePath string, handlers ...engine.HandlerFunc) engine.IRoutes {
+	routes := that.target.(gin.IRoutes).HEAD(relativePath, ConvertHandlerFunc(handlers)...)
 	return that.newRoutes(routes)
 }
 
 // StaticFile static file
 // router.StaticFile("favicon.ico", "./resources/favicon.ico")
 func (that *WebRoutes) StaticFile(relativePath, filepath string) engine.IRoutes {
-	routes := that.getTarget().StaticFile(relativePath, filepath)
+	routes := that.target.(gin.IRoutes).StaticFile(relativePath, filepath)
 	return that.newRoutes(routes)
 }
 
 // Static static
 // router.Static("/static", "/var/www")
 func (that *WebRoutes) Static(relativePath, root string) engine.IRoutes {
-	routes := that.getTarget().Static(relativePath, root)
+	routes := that.target.(gin.IRoutes).Static(relativePath, root)
 	return that.newRoutes(routes)
 }
 
 // StaticFS static fs
 // Gin by default user: gin.Dir()
 func (that *WebRoutes) StaticFS(relativePath string, fs http.FileSystem) engine.IRoutes {
-	routes := that.getTarget().StaticFS(relativePath, fs)
+	routes := that.target.(gin.IRoutes).StaticFS(relativePath, fs)
 	return that.newRoutes(routes)
 }
 
@@ -201,45 +187,60 @@ func (that *WebRoutes) StaticFS(relativePath string, fs http.FileSystem) engine.
 //========================================================= 分割线
 
 // ConvertHandlerFunc 转换 engine.HandlerFunc => gin.HandlerFunc
-func ConvertHandlerFunc(handler engine.HandlerFunc) func(*gin.Context) {
-	return interface{}(handler).(func(*gin.Context))
-	//return func(ctx *gin.Context) {
-	//	//handler(interface{}(ctx).(*engine.Context))
-	//	handler(interface{}(&WebContext{target: ctx}).(*engine.Context))
-	//}
+func ConvertHandlerFunc(handlers []engine.HandlerFunc) []gin.HandlerFunc {
+	//return interface{}(handlers).([]gin.HandlerFunc)
+	var hs []gin.HandlerFunc
+	for _, handler := range handlers {
+		hs = append(hs, func(ctx *gin.Context) {
+			handler(&WebContext{
+				ctx: ctx,
+			})
+		})
+	}
+	return hs
 }
 
 // WebContext context
-//type WebContext struct {
-//	target *gin.Context
-//}
-//
+type WebContext struct {
+	ctx *gin.Context
+}
+
 // Header header
-//func (that *WebContext) Header(key, value string) {
-//	that.target.Header(key, value)
-//}
-//
-//// GetHeader header
-//func (that *WebContext) GetHeader(key string) string {
-//	return that.target.GetHeader(key)
-//}
-//
-//// Set set
-//func (that *WebContext) Set(key string, value interface{}) {
-//	that.target.Set(key, value)
-//}
-//
-//// JSON json
-//func (that *WebContext) JSON(code int, obj interface{}) {
-//	that.target.JSON(code, obj)
-//}
-//
-//// JSONP jsonp
-//func (that *WebContext) JSONP(code int, obj interface{}) {
-//	that.target.JSONP(code, obj)
-//}
-//
-//// Next next
-//func (that *WebContext) Next() {
-//	that.target.Next()
-//}
+func (that *WebContext) Header(key, value string) {
+	that.ctx.Header(key, value)
+}
+
+// GetHeader header
+func (that *WebContext) GetHeader(key string) string {
+	return that.ctx.GetHeader(key)
+}
+
+// Set set
+func (that *WebContext) Set(key string, value interface{}) {
+	that.ctx.Set(key, value)
+}
+
+// JSON json
+func (that *WebContext) JSON(code int, obj interface{}) {
+	that.ctx.JSON(code, obj)
+}
+
+// JSONP jsonp
+func (that *WebContext) JSONP(code int, obj interface{}) {
+	that.ctx.JSONP(code, obj)
+}
+
+// Next next
+func (that *WebContext) Next() {
+	that.ctx.Next()
+}
+
+// RequestMethod method
+func (that *WebContext) RequestMethod() string {
+	return that.ctx.Request.Method
+}
+
+// RequestHeader header
+func (that *WebContext) RequestHeader() http.Header {
+	return that.ctx.Request.Header
+}
