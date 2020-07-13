@@ -15,7 +15,9 @@ import (
 
 var _ engine.IEngine = (*WebFramework)(nil)
 
-var _ engine.Context = &WebContext{}
+//var _ engine.Context = &WebContext{}
+var _ engine.Context = (*gin.Context)(nil)
+
 var _ engine.IRouter = &WebRouter{}
 var _ engine.IRoutes = &WebRoutes{}
 
@@ -35,15 +37,6 @@ func InitWebFramework() (*WebFramework, error) {
 	return &WebFramework{
 		target: engine,
 	}, nil
-}
-
-// ConvertHandlerFunc 转换 engine.HandlerFunc => gin.HandlerFunc
-func ConvertHandlerFunc(handler engine.HandlerFunc) func(*gin.Context) {
-	return func(ctx *gin.Context) {
-		handler(interface{}(&WebContext{
-			target: ctx,
-		}).(*engine.Context))
-	}
 }
 
 //========================================================= 分割线
@@ -74,45 +67,6 @@ func (that *WebFramework) Run(addr ...string) error {
 // RunHandler 获取服务器句柄
 func (that *WebFramework) RunHandler() http.Handler {
 	return that.target
-}
-
-//========================================================= 分割线
-//========================================================= 分割线
-//========================================================= 分割线
-
-// WebContext context
-type WebContext struct {
-	target *gin.Context
-}
-
-// Header header
-func (that *WebContext) Header(key, value string) {
-	that.target.Header(key, value)
-}
-
-// GetHeader header
-func (that *WebContext) GetHeader(key string) string {
-	return that.target.GetHeader(key)
-}
-
-// Set set
-func (that *WebContext) Set(key string, value interface{}) {
-	that.target.Set(key, value)
-}
-
-// JSON json
-func (that *WebContext) JSON(code int, obj interface{}) {
-	that.target.JSON(code, obj)
-}
-
-// JSONP jsonp
-func (that *WebContext) JSONP(code int, obj interface{}) {
-	that.target.JSONP(code, obj)
-}
-
-// Next next
-func (that *WebContext) Next() {
-	that.target.Next()
 }
 
 //========================================================= 分割线
@@ -241,3 +195,51 @@ func (that *WebRoutes) StaticFS(relativePath string, fs http.FileSystem) engine.
 	routes := that.getTarget().StaticFS(relativePath, fs)
 	return that.newRoutes(routes)
 }
+
+//========================================================= 分割线
+//========================================================= 分割线
+//========================================================= 分割线
+
+// ConvertHandlerFunc 转换 engine.HandlerFunc => gin.HandlerFunc
+func ConvertHandlerFunc(handler engine.HandlerFunc) func(*gin.Context) {
+	return interface{}(handler).(func(*gin.Context))
+	//return func(ctx *gin.Context) {
+	//	//handler(interface{}(ctx).(*engine.Context))
+	//	handler(interface{}(&WebContext{target: ctx}).(*engine.Context))
+	//}
+}
+
+// WebContext context
+//type WebContext struct {
+//	target *gin.Context
+//}
+//
+// Header header
+//func (that *WebContext) Header(key, value string) {
+//	that.target.Header(key, value)
+//}
+//
+//// GetHeader header
+//func (that *WebContext) GetHeader(key string) string {
+//	return that.target.GetHeader(key)
+//}
+//
+//// Set set
+//func (that *WebContext) Set(key string, value interface{}) {
+//	that.target.Set(key, value)
+//}
+//
+//// JSON json
+//func (that *WebContext) JSON(code int, obj interface{}) {
+//	that.target.JSON(code, obj)
+//}
+//
+//// JSONP jsonp
+//func (that *WebContext) JSONP(code int, obj interface{}) {
+//	that.target.JSONP(code, obj)
+//}
+//
+//// Next next
+//func (that *WebContext) Next() {
+//	that.target.Next()
+//}
