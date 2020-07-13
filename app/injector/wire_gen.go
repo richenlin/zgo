@@ -6,10 +6,11 @@
 package injector
 
 import (
-	"github.com/google/wire"
 	"zgo/engine"
 	"zgo/engine/gin"
 	"zgo/modules/router"
+
+	"github.com/google/wire"
 )
 
 // Injectors from wire.go:
