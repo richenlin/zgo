@@ -7,8 +7,6 @@ SERVER_BIN = ./cmd/app/${APP}
 RELEASE_ROOT = release
 RELEASE_SERVER = release/${APP}
 
-all: start
-
 run: start
 
 dev: debug
@@ -22,11 +20,15 @@ install:
 build:
 	go build -ldflags "-w -s" -o $(SERVER_BIN) ./cmd/app
 
+# go get -u github.com/go-delve/delve/cmd/dlv
+# 使用“--”将标志传递给正在调试的程
+# 调试过程中,会产生一些僵尸进程,这个时候,可以通过杀死父进程解决
+# ps -ef | grep defunct | more (kill -9 pid 是无法删除进程)
 debug:
-	go run cmd/app/main.go web -c ./configs/config.toml
+	dlv debug --log --headless --api-version=2 --listen=127.0.0.1:2345 cmd/app/main.go -- web -c ./configs/config.toml
 
 start:
-	go run cmd/app/main.go web
+	go run cmd/app/main.go web -c ./configs/config.toml
 
 # go get -u github.com/swaggo/swag/cmd/swag
 swagger:

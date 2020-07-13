@@ -78,6 +78,7 @@ type Config struct {
 	Swagger     bool
 	PrintConfig bool
 	HTTP        HTTP
+	Casbin      Casbin
 	Logging     Logging
 	UniqueID    struct {
 		Type      string

@@ -7,8 +7,10 @@ require (
 	github.com/LyricTian/gin-admin/v6 v6.4.3
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
 	github.com/bwmarrin/snowflake v0.3.0
+	github.com/casbin/casbin v1.9.1
 	github.com/casbin/casbin/v2 v2.8.2
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/fatih/camelcase v1.0.0 // indirect
 	github.com/fatih/structs v1.1.0 // indirect
 	github.com/gin-gonic/gin v1.6.3
@@ -22,8 +24,10 @@ require (
 	github.com/json-iterator/go v1.1.9
 	github.com/koding/multiconfig v0.0.0-20171124222453-69c27309b2d7
 	github.com/mailru/easyjson v0.7.1 // indirect
+	github.com/memwey/casbin-sqlx-adapter v0.2.0
 	github.com/sirupsen/logrus v1.6.0
 	github.com/stretchr/testify v1.5.1
+	github.com/swaggo/gin-swagger v1.2.0
 	github.com/swaggo/swag v1.6.7
 	github.com/urfave/cli/v2 v2.2.0
 	go.mongodb.org/mongo-driver v1.3.3
