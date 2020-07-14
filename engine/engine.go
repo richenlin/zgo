@@ -11,14 +11,13 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
-	"sync/atomic"
 	"syscall"
 	"time"
 	"zgo/modules/config"
 	"zgo/modules/logger"
 )
 
-//var WebFrameWorkSet = wire.NewSet(wire.Bind(new(engine.Engine), new(*WebFrameWork)))
+// var WebFrameworkSet = wire.NewSet(InitWebFramework, wire.Bind(new(engine.IEngine), new(*WebFramework)))
 
 // IEngine web框架的接口
 type IEngine interface {
@@ -38,8 +37,8 @@ type IEngine interface {
 //====================================================分割线
 //====================================================分割线
 
-// InitHTTPServer 初始化http服务
-func InitHTTPServer(ctx context.Context, handler http.Handler) func() {
+// RunHTTPServer 初始化http服务
+func RunHTTPServer(ctx context.Context, handler http.Handler) func() {
 	cfg := config.C.HTTP
 	addr := fmt.Sprintf("%s:%d", cfg.Host, cfg.Port)
 
@@ -52,7 +51,7 @@ func InitHTTPServer(ctx context.Context, handler http.Handler) func() {
 	}
 
 	go func() {
-		logger.Printf(ctx, "HTTP server is running at %s.", addr)
+		logger.Printf(ctx, "HTTP Server is running at %s.", addr)
 		var err error
 		if cfg.CertFile != "" && cfg.KeyFile != "" {
 			srv.TLSConfig = &tls.Config{MinVersion: tls.VersionTLS12}
@@ -77,32 +76,21 @@ func InitHTTPServer(ctx context.Context, handler http.Handler) func() {
 }
 
 // Run 运行服务
-func Run(ctx context.Context, init func() (func(), error)) error {
-	var state int32 = 1
+func Run(ctx context.Context, runServer func() (func(), error)) error {
 	sc := make(chan os.Signal, 1)
 	signal.Notify(sc, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
-	cleanFunc, err := init()
+
+	shutdownServer, err := runServer()
 	if err != nil {
 		return err
 	}
 
-EXIT:
-	for {
-		sig := <-sc
-		logger.Printf(ctx, "Received a signal[%s]", sig.String())
-		switch sig {
-		case syscall.SIGQUIT, syscall.SIGTERM, syscall.SIGINT:
-			atomic.CompareAndSwapInt32(&state, 1, 0)
-			break EXIT
-		case syscall.SIGHUP:
-		default:
-			break EXIT
-		}
-	}
-
-	cleanFunc()
-	logger.Printf(ctx, "HTTP server exit")
-	time.Sleep(time.Second)
-	os.Exit(int(atomic.LoadInt32(&state)))
+	sig := <-sc // 等待服务器中断
+	logger.Printf(ctx, "Received a signal [%s]", sig.String())
+	// 结束服务
+	logger.Printf(ctx, "HTTP Server shutdown ...")
+	shutdownServer()
+	logger.Printf(ctx, "HTTP Server exiting")
+	time.Sleep(time.Second) // 延迟1s, 用于日志等信息保存
 	return nil
 }

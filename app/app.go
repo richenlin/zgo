@@ -36,8 +36,8 @@ func SetVersion(s string) Option {
 	}
 }
 
-// Init 应用初始化
-func Init(ctx context.Context, opts ...Option) (func(), error) {
+// RunServer 启动服务
+func RunServer(ctx context.Context, opts ...Option) (func(), error) {
 	var o options
 	for _, opt := range opts {
 		opt(&o)
@@ -62,10 +62,10 @@ func Init(ctx context.Context, opts ...Option) (func(), error) {
 	}
 
 	// 初始化HTTP服务
-	httpServerCleanFunc := engine.InitHTTPServer(ctx, injector.Engine.RunHandler())
+	shutdownServerFunc := engine.RunHTTPServer(ctx, injector.Engine.RunHandler())
 
 	return func() {
-		httpServerCleanFunc()
+		shutdownServerFunc()
 		injectorCleanFunc()
 		loggerCleanFunc()
 	}, nil
@@ -74,6 +74,6 @@ func Init(ctx context.Context, opts ...Option) (func(), error) {
 // Run 运行服务
 func Run(ctx context.Context, opts ...Option) error {
 	return engine.Run(ctx, func() (func(), error) {
-		return Init(ctx, opts...)
+		return RunServer(ctx, opts...)
 	})
 }
