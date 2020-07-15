@@ -1,10 +1,19 @@
 package system
 
-const version = "v1.2.14"
+import "zgo/modules/logger"
 
+// 服务器版本
+var version = "0.0.1"
+
+// SetVersion ver系统版本
+func SetVersion(ver string) {
+	version = ver
+	logger.SetVersion(ver)
+}
+
+// 依赖主题版本(前端版本)
 var requireThemeVersion = map[string][]string{
-	"adminlte": {">=v0.0.35"},
-	"sword":    {">=v0.0.35"},
+	"kratos-ui": {"0.0.1"},
 }
 
 // Version return the version of framework.

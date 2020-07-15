@@ -46,8 +46,13 @@ func AddHook(hook Hook) {
 }
 
 // newEntry 新建日志元数据
-func newEntry(fields map[string]interface{}) *Entry {
-	return &Entry{entry: logrus.WithFields(fields)}
+func newEntry(entry *logrus.Entry) *Entry {
+	return &Entry{entry}
+}
+
+// newEntry 新建日志元数据
+func newEntryWithFields(fields map[string]interface{}) *Entry {
+	return newEntry(logrus.WithFields(fields))
 }
 
 // Entry 定义统一的日志写入方式
@@ -68,10 +73,12 @@ func (e *Entry) checkAndDelete(fields map[string]interface{}, keys ...string) {
 func (e *Entry) WithFields(fields map[string]interface{}) *Entry {
 	e.checkAndDelete(fields,
 		TraceIDKey,
-		SpanTitleKey,
-		SpanFunctionKey,
-		VersionKey)
-	return newEntry(fields)
+		UserIDKey,
+		RoleIDKey,
+		HostnameKey,
+		VersionKey,
+	)
+	return newEntry(e.entry.WithFields(fields))
 }
 
 // WithField 结构化字段写入

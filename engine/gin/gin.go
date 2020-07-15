@@ -5,17 +5,21 @@
 package gin
 
 import (
+	"io"
 	"net/http"
+	"time"
 	"zgo/engine"
 	"zgo/modules/config"
+	"zgo/modules/result"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/google/wire"
 )
 
 var _ engine.IEngine = (*WebFramework)(nil)
 
-var _ engine.IContext = &WebContext{}
+var _ engine.Context = &WebContext{}
 var _ engine.IRouter = &WebRouter{}
 var _ engine.IRoutes = &WebRoutes{}
 
@@ -27,13 +31,13 @@ func InitWebFramework() (*WebFramework, error) {
 	gin.SetMode(config.C.RunMode)
 	//gin.SetMode(gin.DebugMode)
 
-	engine := gin.New()
+	app := gin.New()
 
 	// 默认
-	engine.Use(gin.Logger(), gin.Recovery())
+	// UseMiddlewares(app)
 
 	result := new(WebFramework)
-	result.target = engine
+	result.target = app
 	return result, nil
 }
 
@@ -51,6 +55,11 @@ func (that *WebFramework) Name() string {
 	return "gin"
 }
 
+// Target target
+func (that *WebFramework) Target() interface{} {
+	return that.target
+}
+
 // Run 运行服务器
 func (that *WebFramework) Run(addr ...string) error {
 	return that.target.(*gin.Engine).Run(addr...)
@@ -59,6 +68,16 @@ func (that *WebFramework) Run(addr ...string) error {
 // RunHandler 获取服务器句柄
 func (that *WebFramework) RunHandler() http.Handler {
 	return that.target.(*gin.Engine)
+}
+
+// NoMethod 未匹配到方法
+func (that *WebFramework) NoMethod(handlers ...engine.HandlerFunc) {
+	that.target.(*gin.Engine).NoMethod(ConvertHandlerFunc(handlers)...)
+}
+
+// NoRoute 未匹配到路由
+func (that *WebFramework) NoRoute(handlers ...engine.HandlerFunc) {
+	that.target.(*gin.Engine).NoMethod(ConvertHandlerFunc(handlers)...)
 }
 
 //========================================================= 分割线
@@ -200,6 +219,8 @@ func ConvertHandlerFunc(handlers []engine.HandlerFunc) []gin.HandlerFunc {
 	return hs
 }
 
+//========================================================= 分割线
+
 // WebContext context
 type WebContext struct {
 	ctx *gin.Context
@@ -215,10 +236,19 @@ func (that *WebContext) GetHeader(key string) string {
 	return that.ctx.GetHeader(key)
 }
 
+//========================================================= 分割线
+
 // Set set
 func (that *WebContext) Set(key string, value interface{}) {
 	that.ctx.Set(key, value)
 }
+
+// Get set
+func (that *WebContext) Get(key string) (value interface{}, exists bool) {
+	return that.ctx.Get(key)
+}
+
+//========================================================= 分割线
 
 // JSON json
 func (that *WebContext) JSON(code int, obj interface{}) {
@@ -230,10 +260,29 @@ func (that *WebContext) JSONP(code int, obj interface{}) {
 	that.ctx.JSONP(code, obj)
 }
 
+// Data data
+func (that *WebContext) Data(code int, contentType string, data []byte) {
+	that.ctx.Data(code, contentType, data)
+}
+
+//========================================================= 分割线
+
+// File file
+func (that *WebContext) File(file string) {
+	that.ctx.File(file)
+}
+
 // Next next
 func (that *WebContext) Next() {
 	that.ctx.Next()
 }
+
+// Abort abort
+func (that *WebContext) Abort() {
+	that.ctx.Abort()
+}
+
+//========================================================= 分割线
 
 // RequestMethod method
 func (that *WebContext) RequestMethod() string {
@@ -243,4 +292,106 @@ func (that *WebContext) RequestMethod() string {
 // RequestHeader header
 func (that *WebContext) RequestHeader() http.Header {
 	return that.ctx.Request.Header
+}
+
+// RequestURLPath path
+func (that *WebContext) RequestURLPath() string {
+	return that.ctx.Request.URL.Path
+}
+
+// RequestURLString path
+func (that *WebContext) RequestURLString() string {
+	return that.ctx.Request.URL.String()
+}
+
+// RequestContentLength content length
+func (that *WebContext) RequestContentLength() int64 {
+	return that.ctx.Request.ContentLength
+}
+
+// RequestGetBody request body
+func (that *WebContext) RequestGetBody() (io.ReadCloser, error) {
+	return that.ctx.Request.GetBody()
+}
+
+// RequestSetBody request body
+func (that *WebContext) RequestSetBody(body io.ReadCloser) {
+	that.ctx.Request.Body = body
+}
+
+// ResponseWriter Writer
+func (that *WebContext) ResponseWriter() http.ResponseWriter {
+	return that.ctx.Writer
+}
+
+// ResponseStatus Writer
+func (that *WebContext) ResponseStatus() int {
+	return that.ctx.Writer.Status()
+}
+
+// ResponseSize Writer
+func (that *WebContext) ResponseSize() int {
+	return that.ctx.Writer.Size()
+}
+
+//========================================================= 分割线
+
+// ClientIP client ip
+func (that *WebContext) ClientIP() string {
+	return that.ctx.ClientIP()
+}
+
+// GetTraceID 追踪ID
+func (that *WebContext) GetTraceID() string {
+	if v, ok := that.ctx.Get(result.TraceIDKey); ok && v != "" {
+		return v.(string)
+	}
+
+	// 优先从请求头中获取请求ID
+	traceID := that.ctx.GetHeader("X-Request-Id")
+	if traceID == "" {
+		// 没有自建
+		v, err := uuid.NewRandom()
+		if err != nil {
+			panic(err)
+		}
+		traceID = v.String()
+	}
+	that.ctx.Set(result.TraceIDKey, traceID)
+	return traceID
+}
+
+// GetUserInfo 用户ID
+func (that *WebContext) GetUserInfo() (engine.UserInfo, bool) {
+	v, ok := that.ctx.Get(result.UserInfoKey)
+	return v.(engine.UserInfo), ok
+}
+
+// SetUserInfo 用户ID
+func (that *WebContext) SetUserInfo(user engine.UserInfo) {
+	that.ctx.Set(result.UserInfoKey, user)
+}
+
+/************************************/
+/***** GOLANG.ORG/X/NET/CONTEXT *****/
+/************************************/
+
+// Deadline always returns that there is no deadline (ok==false)
+func (that *WebContext) Deadline() (deadline time.Time, ok bool) {
+	return that.Deadline()
+}
+
+// Done always returns nil (chan which will wait forever)
+func (that *WebContext) Done() <-chan struct{} {
+	return that.Done()
+}
+
+// Err always returns nil, maybe you want to use Request.Context().Err() instead.
+func (that *WebContext) Err() error {
+	return that.Err()
+}
+
+// Value returns the value associated with this context for key, or nil
+func (that *WebContext) Value(key interface{}) interface{} {
+	return that.Value(key)
 }

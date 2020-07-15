@@ -51,12 +51,14 @@ func MustLoad(fpaths ...string) {
 }
 
 // LoadConfigDefault 加载默认值
-func LoadConfigDefault(conf *Config) {
-	conf.RunMode = "release"
-	conf.HTTP.Host = "0.0.0.0"
-	conf.HTTP.Port = 80
-	conf.Logging.Level = "info"
-	conf.Logging.SyslogNetwork = "udp"
+func LoadConfigDefault(c *Config) {
+	c.RunMode = "release"
+	c.HTTP.Host = "0.0.0.0"
+	c.HTTP.Port = 80
+	c.HTTP.ContextPath = "api"
+	c.Logging.Level = "info"
+	c.Logging.SyslogNetwork = "udp"
+	c.WWW.Index = "index.html"
 
 }
 
@@ -80,18 +82,39 @@ type Config struct {
 	HTTP        HTTP
 	Casbin      Casbin
 	Logging     Logging
-	UniqueID    struct {
-		Type      string
-		Snowflake struct {
-			Node  int64
-			Epoch int64
-		}
+	RateLimiter RateLimiter
+	JWTAuth     JWTAuth
+	CORS        CORS
+	GZIP        GZIP
+	Redis       Redis
+	MySQL       MySQL
+	Postgres    Postgres
+	Sqlite3     Sqlite3
+
+	Middle struct {
+		Logger  bool
+		Recover bool
+	}
+	WWW struct {
+		Index string
+		Dir   string
 	}
 }
 
 // IsDebugMode 是否是debug模式
 func (c *Config) IsDebugMode() bool {
 	return c.RunMode == "debug"
+}
+
+// HTTP http配置参数
+type HTTP struct {
+	Host             string //`yaml:"zgo,http,host"`
+	Port             int    //`yaml:"zgo,http,port"`
+	CertFile         string
+	KeyFile          string
+	ShutdownTimeout  int
+	MaxContentLength int64
+	ContextPath      string
 }
 
 // Casbin casbin配置参数
@@ -101,6 +124,9 @@ type Casbin struct {
 	Model            string
 	AutoLoad         bool
 	AutoLoadInternal int
+	PolicyType       string // file | mysql | sqlite | postgres | redis | restful
+	PolicySource     string // policy.json | root:1234@tcp(127.0.0.1:3306)/yourdb | http://xxx.xxx/api/casbin/policy.rule
+	PolicyTable      string // casbin_rule
 }
 
 // Logging 日志配置参数
@@ -114,35 +140,6 @@ type Logging struct {
 	SyslogAddr       string
 	SyslogTag        string
 	//SyslogPriority   int
-}
-
-// JWTAuth 用户认证
-type JWTAuth struct {
-	Enable        bool
-	SigningMethod string
-	SigningKey    string
-	Expired       int
-	Store         string
-	FilePath      string
-	RedisDB       int
-	RedisPrefix   string
-}
-
-// HTTP http配置参数
-type HTTP struct {
-	Host             string `yaml:"zgo,http,host"`
-	Port             int    `yaml:"zgo,http,port"`
-	CertFile         string
-	KeyFile          string
-	ShutdownTimeout  int
-	MaxContentLength int64
-}
-
-// RateLimiter 请求频率限制配置参数
-type RateLimiter struct {
-	Enable  bool
-	Count   int64
-	RedisDB int
 }
 
 // CORS 跨域请求配置参数
@@ -162,11 +159,34 @@ type GZIP struct {
 	ExcludedPaths      []string
 }
 
+// JWTAuth 用户认证
+type JWTAuth struct {
+	Enable        bool
+	SigningMethod string
+	SigningKey    string
+	Expired       int
+	Store         string
+	FilePath      string
+	RedisDB       int
+	RedisPrefix   string
+}
+
+// RateLimiter 请求频率限制配置参数
+type RateLimiter struct {
+	Enable  bool
+	Count   int64
+	RedisDB int
+}
+
 // Redis redis配置参数
 type Redis struct {
 	Addr     string
 	Password string
 }
+
+//===============================================分割线
+//===============================================分割线
+//===============================================分割线
 
 // MySQL mysql配置参数
 type MySQL struct {

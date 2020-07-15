@@ -2,7 +2,7 @@
 // Use of this source code is governed by a Apache-2.0 style
 // license that can be found in the LICENSE file.
 
-package file
+package files
 
 import (
 	"io"
@@ -10,6 +10,7 @@ import (
 	"os"
 	"path"
 	"sync"
+	"zgo/utils"
 )
 
 // Uploader is a file uploader which contains the method Upload.
@@ -62,7 +63,7 @@ func Upload(c UploadFun, form *multipart.Form) error {
 	for k := range form.File {
 		for _, fileObj := range form.File[k] {
 			suffix = path.Ext(fileObj.Filename)
-			filename = modules.Uuid() + suffix
+			filename = utils.Uuid(16) + suffix
 
 			pathStr, err := c(fileObj, filename)
 

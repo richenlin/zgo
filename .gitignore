@@ -34,7 +34,6 @@ runtime/*
 */golang.org/*
 */gopkg.in/*
 */bin
-*bin
 */test/*
 */test
 */vendor

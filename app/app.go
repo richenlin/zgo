@@ -3,7 +3,7 @@ package app
 import (
 	"context"
 	"os"
-	"zgo/engine"
+	"zgo/utils"
 
 	// 引入swagger
 	_ "zgo/app/swagger"
@@ -12,6 +12,7 @@ import (
 	// 引入modules
 	"zgo/modules/config"
 	"zgo/modules/logger"
+	"zgo/modules/system"
 )
 
 type options struct {
@@ -49,6 +50,8 @@ func RunServer(ctx context.Context, opts ...Option) (func(), error) {
 	// 启动日志
 	logger.Printf(ctx, "服务启动，运行模式：%s，版本号：%s，进程号：%d", config.C.RunMode, o.Version, os.Getpid())
 
+	utils.InitID()
+
 	// 初始化日志模块
 	loggerCleanFunc, err := InitLogger(ctx)
 	if err != nil {
@@ -62,7 +65,7 @@ func RunServer(ctx context.Context, opts ...Option) (func(), error) {
 	}
 
 	// 初始化HTTP服务
-	shutdownServerFunc := engine.RunHTTPServer(ctx, injector.Engine.RunHandler())
+	shutdownServerFunc := system.RunHTTPServer(ctx, injector.Engine.RunHandler())
 
 	return func() {
 		shutdownServerFunc()
@@ -73,7 +76,7 @@ func RunServer(ctx context.Context, opts ...Option) (func(), error) {
 
 // Run 运行服务
 func Run(ctx context.Context, opts ...Option) error {
-	return engine.Run(ctx, func() (func(), error) {
+	return system.Run(ctx, func() (func(), error) {
 		return RunServer(ctx, opts...)
 	})
 }

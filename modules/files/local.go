@@ -2,7 +2,7 @@
 // Use of this source code is governed by a Apache-2.0 style
 // license that can be found in the LICENSE file.
 
-package file
+package files
 
 import (
 	"mime/multipart"
@@ -16,7 +16,8 @@ type LocalFileUploader struct {
 // GetLocalFileUploader return the default Uploader.
 func GetLocalFileUploader() Uploader {
 	return &LocalFileUploader{
-		config.GetStore().Path,
+		//config.GetStore().Path,
+		BasePath: "upload",
 	}
 }
 
