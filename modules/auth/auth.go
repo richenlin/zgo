@@ -53,10 +53,30 @@ type Auther interface {
 // GetBearerToken 获取用户令牌
 func GetBearerToken(c engine.Context) string {
 	var token string
-	auth := c.GetHeader("Authorization")
+
 	prefix := "Bearer "
-	if auth != "" && strings.HasPrefix(auth, prefix) {
+	if auth := c.GetHeader("Authorization"); auth != "" && strings.HasPrefix(auth, prefix) {
 		token = auth[len(prefix):]
+	}
+	return token
+}
+
+// GetQueryToke 获取用户令牌
+func GetQueryToke(c engine.Context) string {
+	var token string
+
+	if auth := c.GetHeader("Authorization"); auth != "" {
+		token = auth
+	}
+	return token
+}
+
+// GetCookieToke 获取用户令牌
+func GetCookieToke(c engine.Context) string {
+	var token string
+
+	if auth := c.GetHeader("Authorization"); auth != "" {
+		token = auth
 	}
 	return token
 }

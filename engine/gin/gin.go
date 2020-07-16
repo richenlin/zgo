@@ -5,7 +5,6 @@
 package gin
 
 import (
-	"io"
 	"net/http"
 	"time"
 	"zgo/engine"
@@ -13,6 +12,7 @@ import (
 	"zgo/modules/result"
 
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
 	"github.com/google/uuid"
 	"github.com/google/wire"
 )
@@ -51,33 +51,33 @@ type WebFramework struct {
 }
 
 // Name web框架的名称
-func (that *WebFramework) Name() string {
+func (f *WebFramework) Name() string {
 	return "gin"
 }
 
 // Target target
-func (that *WebFramework) Target() interface{} {
-	return that.target
+func (f *WebFramework) Target() interface{} {
+	return f.target
 }
 
 // Run 运行服务器
-func (that *WebFramework) Run(addr ...string) error {
-	return that.target.(*gin.Engine).Run(addr...)
+func (f *WebFramework) Run(addr ...string) error {
+	return f.target.(*gin.Engine).Run(addr...)
 }
 
 // RunHandler 获取服务器句柄
-func (that *WebFramework) RunHandler() http.Handler {
-	return that.target.(*gin.Engine)
+func (f *WebFramework) RunHandler() http.Handler {
+	return f.target.(*gin.Engine)
 }
 
 // NoMethod 未匹配到方法
-func (that *WebFramework) NoMethod(handlers ...engine.HandlerFunc) {
-	that.target.(*gin.Engine).NoMethod(ConvertHandlerFunc(handlers)...)
+func (f *WebFramework) NoMethod(handlers ...engine.HandlerFunc) {
+	f.target.(*gin.Engine).NoMethod(ConvertHandlerFunc(handlers)...)
 }
 
 // NoRoute 未匹配到路由
-func (that *WebFramework) NoRoute(handlers ...engine.HandlerFunc) {
-	that.target.(*gin.Engine).NoMethod(ConvertHandlerFunc(handlers)...)
+func (f *WebFramework) NoRoute(handlers ...engine.HandlerFunc) {
+	f.target.(*gin.Engine).NoMethod(ConvertHandlerFunc(handlers)...)
 }
 
 //========================================================= 分割线
@@ -90,10 +90,10 @@ type WebRouter struct {
 }
 
 // Group 路由分组
-func (that *WebRouter) Group(relativePath string, handlers ...engine.HandlerFunc) engine.IRouter {
-	router := that.target.(gin.IRouter).Group(relativePath, ConvertHandlerFunc(handlers)...)
-	if that.target == router {
-		return that
+func (r *WebRouter) Group(relativePath string, handlers ...engine.HandlerFunc) engine.IRouter {
+	router := r.target.(gin.IRouter).Group(relativePath, ConvertHandlerFunc(handlers)...)
+	if r.target == router {
+		return r
 	}
 	result := new(WebRouter)
 	result.target = router
@@ -111,9 +111,9 @@ type WebRoutes struct {
 }
 
 // newRoutes routes
-func (that *WebRoutes) newRoutes(routes gin.IRoutes) engine.IRoutes {
-	if that.target == routes {
-		return that
+func (r *WebRoutes) newRoutes(routes gin.IRoutes) engine.IRoutes {
+	if r.target == routes {
+		return r
 	}
 	result := new(WebRouter)
 	result.target = routes
@@ -121,84 +121,84 @@ func (that *WebRoutes) newRoutes(routes gin.IRoutes) engine.IRoutes {
 }
 
 // Use use
-func (that *WebRoutes) Use(middleware ...engine.HandlerFunc) engine.IRoutes {
-	routes := that.target.(gin.IRoutes).Use(ConvertHandlerFunc(middleware)...)
-	return that.newRoutes(routes)
+func (r *WebRoutes) Use(middleware ...engine.HandlerFunc) engine.IRoutes {
+	routes := r.target.(gin.IRoutes).Use(ConvertHandlerFunc(middleware)...)
+	return r.newRoutes(routes)
 }
 
 // Handle handle
-func (that *WebRoutes) Handle(httpMethod string, relativePath string, handlers ...engine.HandlerFunc) engine.IRoutes {
-	routes := that.target.(gin.IRoutes).Handle(httpMethod, relativePath, ConvertHandlerFunc(handlers)...)
-	return that.newRoutes(routes)
+func (r *WebRoutes) Handle(httpMethod string, relativePath string, handlers ...engine.HandlerFunc) engine.IRoutes {
+	routes := r.target.(gin.IRoutes).Handle(httpMethod, relativePath, ConvertHandlerFunc(handlers)...)
+	return r.newRoutes(routes)
 }
 
 // Any any
-func (that *WebRoutes) Any(relativePath string, handlers ...engine.HandlerFunc) engine.IRoutes {
-	routes := that.target.(gin.IRoutes).Any(relativePath, ConvertHandlerFunc(handlers)...)
-	return that.newRoutes(routes)
+func (r *WebRoutes) Any(relativePath string, handlers ...engine.HandlerFunc) engine.IRoutes {
+	routes := r.target.(gin.IRoutes).Any(relativePath, ConvertHandlerFunc(handlers)...)
+	return r.newRoutes(routes)
 }
 
 // GET get
-func (that *WebRoutes) GET(relativePath string, handlers ...engine.HandlerFunc) engine.IRoutes {
-	routes := that.target.(gin.IRoutes).GET(relativePath, ConvertHandlerFunc(handlers)...)
-	return that.newRoutes(routes)
+func (r *WebRoutes) GET(relativePath string, handlers ...engine.HandlerFunc) engine.IRoutes {
+	routes := r.target.(gin.IRoutes).GET(relativePath, ConvertHandlerFunc(handlers)...)
+	return r.newRoutes(routes)
 }
 
 // POST post
-func (that *WebRoutes) POST(relativePath string, handlers ...engine.HandlerFunc) engine.IRoutes {
-	routes := that.target.(gin.IRoutes).POST(relativePath, ConvertHandlerFunc(handlers)...)
-	return that.newRoutes(routes)
+func (r *WebRoutes) POST(relativePath string, handlers ...engine.HandlerFunc) engine.IRoutes {
+	routes := r.target.(gin.IRoutes).POST(relativePath, ConvertHandlerFunc(handlers)...)
+	return r.newRoutes(routes)
 }
 
 // DELETE delete
-func (that *WebRoutes) DELETE(relativePath string, handlers ...engine.HandlerFunc) engine.IRoutes {
-	routes := that.target.(gin.IRoutes).DELETE(relativePath, ConvertHandlerFunc(handlers)...)
-	return that.newRoutes(routes)
+func (r *WebRoutes) DELETE(relativePath string, handlers ...engine.HandlerFunc) engine.IRoutes {
+	routes := r.target.(gin.IRoutes).DELETE(relativePath, ConvertHandlerFunc(handlers)...)
+	return r.newRoutes(routes)
 }
 
 // PATCH patch
-func (that *WebRoutes) PATCH(relativePath string, handlers ...engine.HandlerFunc) engine.IRoutes {
-	routes := that.target.(gin.IRoutes).PATCH(relativePath, ConvertHandlerFunc(handlers)...)
-	return that.newRoutes(routes)
+func (r *WebRoutes) PATCH(relativePath string, handlers ...engine.HandlerFunc) engine.IRoutes {
+	routes := r.target.(gin.IRoutes).PATCH(relativePath, ConvertHandlerFunc(handlers)...)
+	return r.newRoutes(routes)
 }
 
 // PUT put
-func (that *WebRoutes) PUT(relativePath string, handlers ...engine.HandlerFunc) engine.IRoutes {
-	routes := that.target.(gin.IRoutes).PUT(relativePath, ConvertHandlerFunc(handlers)...)
-	return that.newRoutes(routes)
+func (r *WebRoutes) PUT(relativePath string, handlers ...engine.HandlerFunc) engine.IRoutes {
+	routes := r.target.(gin.IRoutes).PUT(relativePath, ConvertHandlerFunc(handlers)...)
+	return r.newRoutes(routes)
 }
 
 // OPTIONS options
-func (that *WebRoutes) OPTIONS(relativePath string, handlers ...engine.HandlerFunc) engine.IRoutes {
-	routes := that.target.(gin.IRoutes).OPTIONS(relativePath, ConvertHandlerFunc(handlers)...)
-	return that.newRoutes(routes)
+func (r *WebRoutes) OPTIONS(relativePath string, handlers ...engine.HandlerFunc) engine.IRoutes {
+	routes := r.target.(gin.IRoutes).OPTIONS(relativePath, ConvertHandlerFunc(handlers)...)
+	return r.newRoutes(routes)
 }
 
 // HEAD head
-func (that *WebRoutes) HEAD(relativePath string, handlers ...engine.HandlerFunc) engine.IRoutes {
-	routes := that.target.(gin.IRoutes).HEAD(relativePath, ConvertHandlerFunc(handlers)...)
-	return that.newRoutes(routes)
+func (r *WebRoutes) HEAD(relativePath string, handlers ...engine.HandlerFunc) engine.IRoutes {
+	routes := r.target.(gin.IRoutes).HEAD(relativePath, ConvertHandlerFunc(handlers)...)
+	return r.newRoutes(routes)
 }
 
 // StaticFile static file
 // router.StaticFile("favicon.ico", "./resources/favicon.ico")
-func (that *WebRoutes) StaticFile(relativePath, filepath string) engine.IRoutes {
-	routes := that.target.(gin.IRoutes).StaticFile(relativePath, filepath)
-	return that.newRoutes(routes)
+func (r *WebRoutes) StaticFile(relativePath, filepath string) engine.IRoutes {
+	routes := r.target.(gin.IRoutes).StaticFile(relativePath, filepath)
+	return r.newRoutes(routes)
 }
 
 // Static static
 // router.Static("/static", "/var/www")
-func (that *WebRoutes) Static(relativePath, root string) engine.IRoutes {
-	routes := that.target.(gin.IRoutes).Static(relativePath, root)
-	return that.newRoutes(routes)
+func (r *WebRoutes) Static(relativePath, root string) engine.IRoutes {
+	routes := r.target.(gin.IRoutes).Static(relativePath, root)
+	return r.newRoutes(routes)
 }
 
 // StaticFS static fs
 // Gin by default user: gin.Dir()
-func (that *WebRoutes) StaticFS(relativePath string, fs http.FileSystem) engine.IRoutes {
-	routes := that.target.(gin.IRoutes).StaticFS(relativePath, fs)
-	return that.newRoutes(routes)
+func (r *WebRoutes) StaticFS(relativePath string, fs http.FileSystem) engine.IRoutes {
+	routes := r.target.(gin.IRoutes).StaticFS(relativePath, fs)
+	return r.newRoutes(routes)
 }
 
 //========================================================= 分割线
@@ -226,129 +226,132 @@ type WebContext struct {
 	ctx *gin.Context
 }
 
-// Header header
-func (that *WebContext) Header(key, value string) {
-	that.ctx.Header(key, value)
+// Request request
+func (c *WebContext) Request() *http.Request {
+	return c.ctx.Request
 }
 
-// GetHeader header
-func (that *WebContext) GetHeader(key string) string {
-	return that.ctx.GetHeader(key)
+// ResponseWriter Writer
+func (c *WebContext) ResponseWriter() http.ResponseWriter {
+	return c.ctx.Writer
 }
 
 //========================================================= 分割线
 
 // Set set
-func (that *WebContext) Set(key string, value interface{}) {
-	that.ctx.Set(key, value)
+func (c *WebContext) Set(key string, value interface{}) {
+	c.ctx.Set(key, value)
 }
 
 // Get set
-func (that *WebContext) Get(key string) (value interface{}, exists bool) {
-	return that.ctx.Get(key)
+func (c *WebContext) Get(key string) (value interface{}, exists bool) {
+	return c.ctx.Get(key)
+}
+
+//========================================================= 分割线
+
+// Header header
+func (c *WebContext) Header(key, value string) {
+	c.ctx.Header(key, value)
+}
+
+// GetHeader header
+func (c *WebContext) GetHeader(key string) string {
+	return c.ctx.GetHeader(key)
+}
+
+// GetCookie 获取cookie
+func (c *WebContext) GetCookie(name string) (string, error) {
+	return c.ctx.Cookie(name)
+}
+
+// GetQuery query
+func (c *WebContext) GetQuery(key string) (string, bool) {
+	return c.ctx.GetQuery(key)
+}
+
+// GetQueryArray query
+func (c *WebContext) GetQueryArray(key string) ([]string, bool) {
+	return c.ctx.GetQueryArray(key)
+}
+
+// GetQueryMap query
+func (c *WebContext) GetQueryMap(key string) (map[string]string, bool) {
+	return c.ctx.GetQueryMap(key)
+}
+
+// DefaultQuery query
+func (c *WebContext) DefaultQuery(key, defaultValue string) string {
+	if value, ok := c.GetQuery(key); ok {
+		return value
+	}
+	return defaultValue
+}
+
+// GetParam param
+func (c *WebContext) GetParam(key string) string {
+	return c.ctx.Param(key)
+}
+
+// ResponseStatus Writer
+func (c *WebContext) ResponseStatus() int {
+	return c.ctx.Writer.Status()
+}
+
+// ResponseSize Writer
+func (c *WebContext) ResponseSize() int {
+	return c.ctx.Writer.Size()
 }
 
 //========================================================= 分割线
 
 // JSON json
-func (that *WebContext) JSON(code int, obj interface{}) {
-	that.ctx.JSON(code, obj)
+func (c *WebContext) JSON(code int, obj interface{}) {
+	c.ctx.JSON(code, obj)
 }
 
 // JSONP jsonp
-func (that *WebContext) JSONP(code int, obj interface{}) {
-	that.ctx.JSONP(code, obj)
+func (c *WebContext) JSONP(code int, obj interface{}) {
+	c.ctx.JSONP(code, obj)
 }
 
 // Data data
-func (that *WebContext) Data(code int, contentType string, data []byte) {
-	that.ctx.Data(code, contentType, data)
+func (c *WebContext) Data(code int, contentType string, data []byte) {
+	c.ctx.Data(code, contentType, data)
 }
 
 //========================================================= 分割线
 
 // File file
-func (that *WebContext) File(file string) {
-	that.ctx.File(file)
+func (c *WebContext) File(file string) {
+	c.ctx.File(file)
 }
 
 // Next next
-func (that *WebContext) Next() {
-	that.ctx.Next()
+func (c *WebContext) Next() {
+	c.ctx.Next()
 }
 
 // Abort abort
-func (that *WebContext) Abort() {
-	that.ctx.Abort()
-}
-
-//========================================================= 分割线
-
-// RequestMethod method
-func (that *WebContext) RequestMethod() string {
-	return that.ctx.Request.Method
-}
-
-// RequestHeader header
-func (that *WebContext) RequestHeader() http.Header {
-	return that.ctx.Request.Header
-}
-
-// RequestURLPath path
-func (that *WebContext) RequestURLPath() string {
-	return that.ctx.Request.URL.Path
-}
-
-// RequestURLString path
-func (that *WebContext) RequestURLString() string {
-	return that.ctx.Request.URL.String()
-}
-
-// RequestContentLength content length
-func (that *WebContext) RequestContentLength() int64 {
-	return that.ctx.Request.ContentLength
-}
-
-// RequestGetBody request body
-func (that *WebContext) RequestGetBody() (io.ReadCloser, error) {
-	return that.ctx.Request.GetBody()
-}
-
-// RequestSetBody request body
-func (that *WebContext) RequestSetBody(body io.ReadCloser) {
-	that.ctx.Request.Body = body
-}
-
-// ResponseWriter Writer
-func (that *WebContext) ResponseWriter() http.ResponseWriter {
-	return that.ctx.Writer
-}
-
-// ResponseStatus Writer
-func (that *WebContext) ResponseStatus() int {
-	return that.ctx.Writer.Status()
-}
-
-// ResponseSize Writer
-func (that *WebContext) ResponseSize() int {
-	return that.ctx.Writer.Size()
+func (c *WebContext) Abort() {
+	c.ctx.Abort()
 }
 
 //========================================================= 分割线
 
 // ClientIP client ip
-func (that *WebContext) ClientIP() string {
-	return that.ctx.ClientIP()
+func (c *WebContext) ClientIP() string {
+	return c.ctx.ClientIP()
 }
 
 // GetTraceID 追踪ID
-func (that *WebContext) GetTraceID() string {
-	if v, ok := that.ctx.Get(result.TraceIDKey); ok && v != "" {
+func (c *WebContext) GetTraceID() string {
+	if v, ok := c.ctx.Get(result.TraceIDKey); ok && v != "" {
 		return v.(string)
 	}
 
 	// 优先从请求头中获取请求ID
-	traceID := that.ctx.GetHeader("X-Request-Id")
+	traceID := c.ctx.GetHeader("X-Request-Id")
 	if traceID == "" {
 		// 没有自建
 		v, err := uuid.NewRandom()
@@ -357,41 +360,112 @@ func (that *WebContext) GetTraceID() string {
 		}
 		traceID = v.String()
 	}
-	that.ctx.Set(result.TraceIDKey, traceID)
+	c.ctx.Set(result.TraceIDKey, traceID)
 	return traceID
 }
 
 // GetUserInfo 用户ID
-func (that *WebContext) GetUserInfo() (engine.UserInfo, bool) {
-	v, ok := that.ctx.Get(result.UserInfoKey)
+func (c *WebContext) GetUserInfo() (engine.UserInfo, bool) {
+	v, ok := c.ctx.Get(result.UserInfoKey)
 	return v.(engine.UserInfo), ok
 }
 
 // SetUserInfo 用户ID
-func (that *WebContext) SetUserInfo(user engine.UserInfo) {
-	that.ctx.Set(result.UserInfoKey, user)
+func (c *WebContext) SetUserInfo(user engine.UserInfo) {
+	c.ctx.Set(result.UserInfoKey, user)
+}
+
+/*****************************************/
+/***** GOLANG.ORG/X/NET/HTTP/BINDING *****/
+/*****************************************/
+
+// ShouldBind checks the Content-Type to select a binding engine automatically,
+// Depending the "Content-Type" header different bindings are used:
+//     "application/json" --> JSON binding
+//     "application/xml"  --> XML binding
+// otherwise --> returns an error
+// It parses the request's body as JSON if Content-Type == "application/json" using JSON or XML as a JSON input.
+// It decodes the json payload into the struct specified as a pointer.
+// Like c.Bind() but this method does not set the response status code to 400 and abort if the json is not valid.
+func (c *WebContext) ShouldBind(obj interface{}) error {
+	return c.ctx.ShouldBind(obj)
+}
+
+// ShouldBindURI binds the passed struct pointer using the specified binding engine.
+func (c *WebContext) ShouldBindURI(obj interface{}) error {
+	return c.ctx.ShouldBindUri(obj)
+}
+
+// ShouldBindWith binds the passed struct pointer using the specified binding engine.
+// See the binding package.
+func (c *WebContext) ShouldBindWith(obj interface{}, b binding.Binding) error {
+	return c.ctx.ShouldBindWith(obj)
+}
+
+// ShouldBindBodyWith is similar with ShouldBindWith, but it stores the request
+// body into the context, and reuse when it is called again.
+//
+// NOTE: This method reads the body before binding. So you should use
+// ShouldBindWith for better performance if you need to call only once.
+func (c *WebContext) ShouldBindBodyWith(obj interface{}, bb binding.BindingBody) (err error) {
+	return c.ctx.ShouldBindBodyWith(obj)
+}
+
+// ShouldBindJSON is a shortcut for c.ShouldBindWith(obj, binding.JSON).
+func (c *WebContext) ShouldBindJSON(obj interface{}) error {
+	return c.ShouldBindWith(obj, binding.JSON)
+}
+
+// Bind checks the Content-Type to select a binding engine automatically,
+// Depending the "Content-Type" header different bindings are used:
+//     "application/json" --> JSON binding
+//     "application/xml"  --> XML binding
+// otherwise --> returns an error.
+// It parses the request's body as JSON if Content-Type == "application/json" using JSON or XML as a JSON input.
+// It decodes the json payload into the struct specified as a pointer.
+// It writes a 400 error and sets Content-Type header "text/plain" in the response if input is not valid.
+func (c *WebContext) Bind(obj interface{}) error {
+	return c.ctx.Bind(obj)
+}
+
+// BindURI binds the passed struct pointer using binding.Uri.
+// It will abort the request with HTTP 400 if any error occurs.
+func (c *WebContext) BindURI(obj interface{}) error {
+	return c.ctx.BindUri(obj)
+}
+
+// MustBindWith binds the passed struct pointer using the specified binding engine.
+// It will abort the request with HTTP 400 if any error occurs.
+// See the binding package.
+func (c *WebContext) MustBindWith(obj interface{}, b binding.Binding) error {
+	return c.ctx.MustBindWith(obj)
+}
+
+// BindJSON is a shortcut for c.MustBindWith(obj, binding.JSON).
+func (c *WebContext) BindJSON(obj interface{}) error {
+	return c.MustBindWith(obj, binding.JSON)
 }
 
 /************************************/
 /***** GOLANG.ORG/X/NET/CONTEXT *****/
 /************************************/
 
-// Deadline always returns that there is no deadline (ok==false)
-func (that *WebContext) Deadline() (deadline time.Time, ok bool) {
-	return that.Deadline()
+// Deadline always returns c there is no deadline (ok==false)
+func (c *WebContext) Deadline() (deadline time.Time, ok bool) {
+	return c.Deadline()
 }
 
 // Done always returns nil (chan which will wait forever)
-func (that *WebContext) Done() <-chan struct{} {
-	return that.Done()
+func (c *WebContext) Done() <-chan struct{} {
+	return c.Done()
 }
 
 // Err always returns nil, maybe you want to use Request.Context().Err() instead.
-func (that *WebContext) Err() error {
-	return that.Err()
+func (c *WebContext) Err() error {
+	return c.Err()
 }
 
 // Value returns the value associated with this context for key, or nil
-func (that *WebContext) Value(key interface{}) interface{} {
-	return that.Value(key)
+func (c *WebContext) Value(key interface{}) interface{} {
+	return c.Value(key)
 }

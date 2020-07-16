@@ -2,14 +2,21 @@ package engine
 
 import (
 	"context"
-	"io"
 	"net/http"
+
+	"github.com/gin-gonic/gin/binding"
 )
 
 // Context web框架的上下文
 type Context interface {
 	GetHeader(key string) string
 	Header(key, value string)
+	Cookie(name string) (string, error)
+
+	Request() *http.Request
+	ResponseWriter() http.ResponseWriter
+	ResponseStatus() int
+	ResponseSize() int
 
 	Set(key string, value interface{})
 	Get(key string) (value interface{}, exists bool)
@@ -22,22 +29,26 @@ type Context interface {
 	Next()
 	Abort()
 
-	RequestMethod() string
-	RequestHeader() http.Header
-	RequestURLPath() string
-	RequestURLString() string
-	RequestContentLength() int64
-	RequestGetBody() (io.ReadCloser, error)
-	RequestSetBody(io.ReadCloser)
-
-	ResponseWriter() http.ResponseWriter
-	ResponseStatus() int
-	ResponseSize() int
-
 	ClientIP() string
 	GetTraceID() string
 	GetUserInfo() (UserInfo, bool)
 	SetUserInfo(UserInfo)
+
+	/*****************************************/
+	/***** GOLANG.ORG/X/NET/HTTP/BINDING *****/
+	/*****************************************/
+	ShouldBind(obj interface{}) error
+	ShouldBindURI(obj interface{}) error
+	ShouldBindWith(obj interface{}, b binding.Binding)
+	ShouldBindBodyWith(obj interface{}, bb binding.BindingBody)
+
+	ShouldBindJSON(obj interface{}) error
+
+	Bind(obj interface{}) error
+	BindURI(obj interface{}) error
+	MustBindWith(obj interface{}, b binding.Binding) error
+
+	BindJSON(obj interface{}) error
 
 	/************************************/
 	/***** GOLANG.ORG/X/NET/CONTEXT *****/
