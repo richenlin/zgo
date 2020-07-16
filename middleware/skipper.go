@@ -5,16 +5,17 @@ package middleware
 import (
 	"fmt"
 	"strings"
-	"zgo/engine"
+
+	"github.com/gin-gonic/gin"
 )
 
 // SkipperFunc 定义中间件跳过函数
-type SkipperFunc func(engine.Context) bool
+type SkipperFunc func(*gin.Context) bool
 
 // AllowPathPrefixSkipper 检查请求路径是否包含指定的前缀，如果包含则跳过
 func AllowPathPrefixSkipper(prefixes ...string) SkipperFunc {
-	return func(c engine.Context) bool {
-		path := c.RequestURLPath()
+	return func(c *gin.Context) bool {
+		path := c.Request.URL.Path
 		pathLen := len(path)
 
 		for _, p := range prefixes {
@@ -28,8 +29,8 @@ func AllowPathPrefixSkipper(prefixes ...string) SkipperFunc {
 
 // AllowPathPrefixNoSkipper 检查请求路径是否包含指定的前缀，如果包含则不跳过
 func AllowPathPrefixNoSkipper(prefixes ...string) SkipperFunc {
-	return func(c engine.Context) bool {
-		path := c.RequestURLPath()
+	return func(c *gin.Context) bool {
+		path := c.Request.URL.Path
 		pathLen := len(path)
 
 		for _, p := range prefixes {
@@ -43,8 +44,8 @@ func AllowPathPrefixNoSkipper(prefixes ...string) SkipperFunc {
 
 // AllowMethodAndPathPrefixSkipper 检查请求方法和路径是否包含指定的前缀，如果不包含则跳过
 func AllowMethodAndPathPrefixSkipper(prefixes ...string) SkipperFunc {
-	return func(c engine.Context) bool {
-		path := JoinRouter(c.RequestMethod(), c.RequestURLPath())
+	return func(c *gin.Context) bool {
+		path := JoinRouter(c.Request.Method, c.Request.URL.Path)
 		pathLen := len(path)
 
 		for _, p := range prefixes {
@@ -65,7 +66,7 @@ func JoinRouter(method, path string) string {
 }
 
 // SkipHandler 统一处理跳过函数
-func SkipHandler(c engine.Context, skippers ...SkipperFunc) bool {
+func SkipHandler(c *gin.Context, skippers ...SkipperFunc) bool {
 	for _, skipper := range skippers {
 		if skipper(c) {
 			return true

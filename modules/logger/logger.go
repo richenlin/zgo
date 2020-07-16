@@ -4,7 +4,9 @@ import (
 	"context"
 	"fmt"
 	"os"
-	"zgo/engine"
+	"zgo/modules/helper"
+
+	"github.com/gin-gonic/gin"
 )
 
 // Debugf 写入调试日志
@@ -67,28 +69,18 @@ func SetVersion(v string) {
 	version = v
 }
 
-// TraceIDFunc 获取追踪ID
-type TraceIDFunc interface {
-	GetTraceID() string
-}
-
-// UserFunc 获取用户ID
-type UserFunc interface {
-	GetUserInfo() (engine.UserInfo, bool)
-}
-
 // FromTraceIDContext 从上下文中获取跟踪ID
 func FromTraceIDContext(ctx context.Context) string {
-	if v, ok := ctx.(TraceIDFunc); ok {
-		return v.GetTraceID()
+	if v, ok := ctx.(*gin.Context); ok {
+		return helper.GetTraceID(v)
 	}
 	return "main-" + string(pid) // 系统上下文
 }
 
 // FromUserIDContext 从上下文中获取用户ID
-func FromUserIDContext(ctx context.Context) (engine.UserInfo, bool) {
-	if v, ok := ctx.(UserFunc); ok {
-		return v.GetUserInfo()
+func FromUserIDContext(ctx context.Context) (helper.UserInfo, bool) {
+	if v, ok := ctx.(*gin.Context); ok {
+		return helper.GetUserInfo(v)
 	}
 	return nil, false
 }

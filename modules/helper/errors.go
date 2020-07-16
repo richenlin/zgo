@@ -1,8 +1,9 @@
-package result
+package helper
 
 import (
-	"zgo/engine"
 	"zgo/modules/language"
+
+	"github.com/gin-gonic/gin"
 )
 
 // H h -> map
@@ -30,29 +31,29 @@ var (
 )
 
 // NewError 包装响应错误
-func NewError(ctx engine.Context, showType int, code string, msg string, args ...interface{}) *ErrorInfo {
+func NewError(ctx *gin.Context, showType int, code string, msg string, args ...interface{}) *ErrorInfo {
 	res := &ErrorInfo{
 		success:      false,
 		errorCode:    code,
 		errorMessage: language.Sprintf(ctx, code, msg, args...),
 		showType:     showType,
-		traceID:      ctx.GetTraceID(),
+		traceID:      GetTraceID(ctx),
 	}
 	return res
 }
 
 // NewSuccess 包装响应结果
-func NewSuccess(ctx engine.Context, data interface{}) *Result {
+func NewSuccess(ctx *gin.Context, data interface{}) *Result {
 	res := &Result{
 		success: true,
 		data:    data,
-		traceID: ctx.GetTraceID(),
+		traceID: GetTraceID(ctx),
 	}
 	return res
 }
 
 // Wrap400Response 无法解析异常
-func Wrap400Response(ctx engine.Context, err error) *ErrorModel {
+func Wrap400Response(ctx *gin.Context, err error) *ErrorModel {
 	return &ErrorModel{
 		status:       400,
 		showType:     ShowWarn,

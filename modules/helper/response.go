@@ -1,19 +1,20 @@
-package result
+package helper
 
 import (
 	"net/http"
-	"zgo/engine"
 	"zgo/modules/language"
+
+	"github.com/gin-gonic/gin"
 )
 
 // ResError 包装响应错误
-func ResError(ctx engine.Context, em *ErrorModel) error {
+func ResError(ctx *gin.Context, em *ErrorModel) error {
 	res := &ErrorInfo{
 		success:      false,
 		errorCode:    em.errorCode,
 		errorMessage: language.Sprintf(ctx, em.errorCode, em.errorMessage),
 		showType:     em.showType,
-		traceID:      ctx.GetTraceID(),
+		traceID:      GetTraceID(ctx),
 	}
 	//ctx.JSON(http.StatusOK, res)
 	//ctx.Abort()
@@ -22,20 +23,20 @@ func ResError(ctx engine.Context, em *ErrorModel) error {
 }
 
 // ResErrorResBody 包装响应错误
-func ResErrorResBody(ctx engine.Context, em *ErrorModel) error {
+func ResErrorResBody(ctx *gin.Context, em *ErrorModel) error {
 	res := &ErrorInfo{
 		success:      false,
 		errorCode:    em.errorCode,
 		errorMessage: language.Sprintf(ctx, em.errorCode, em.errorMessage),
 		showType:     em.showType,
-		traceID:      ctx.GetTraceID(),
+		traceID:      GetTraceID(ctx),
 	}
 	ResJSONResBody(ctx, em.status, res)
 	return res
 }
 
 // ResJSONResBody 响应JSON数据
-func ResJSONResBody(ctx engine.Context, status int, v interface{}) {
+func ResJSONResBody(ctx *gin.Context, status int, v interface{}) {
 	buf, err := JSONMarshal(v)
 	if err != nil {
 		panic(err)
@@ -49,7 +50,7 @@ func ResJSONResBody(ctx engine.Context, status int, v interface{}) {
 }
 
 // ResJSON 响应JSON数据
-func ResJSON(ctx engine.Context, status int, v interface{}) {
+func ResJSON(ctx *gin.Context, status int, v interface{}) {
 	buf, err := JSONMarshal(v)
 	if err != nil {
 		panic(err)

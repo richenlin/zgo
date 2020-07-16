@@ -65,7 +65,7 @@ func RunServer(ctx context.Context, opts ...Option) (func(), error) {
 	}
 
 	// 初始化HTTP服务
-	shutdownServerFunc := system.RunHTTPServer(ctx, injector.Engine.RunHandler())
+	shutdownServerFunc := system.RunHTTPServer(ctx, injector.Engine)
 
 	return func() {
 		shutdownServerFunc()

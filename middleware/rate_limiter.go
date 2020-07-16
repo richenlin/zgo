@@ -3,17 +3,17 @@ package middleware
 import (
 	"strconv"
 	"time"
-	"zgo/engine"
 	"zgo/modules/config"
-	"zgo/modules/result"
+	"zgo/modules/helper"
 
+	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis"
 	"github.com/go-redis/redis_rate"
 	"golang.org/x/time/rate"
 )
 
 // RateLimiterMiddleware 请求频率限制中间件
-func RateLimiterMiddleware(skippers ...SkipperFunc) engine.HandlerFunc {
+func RateLimiterMiddleware(skippers ...SkipperFunc) gin.HandlerFunc {
 	conf := config.C.RateLimiter
 	if !conf.Enable {
 		return EmptyMiddleware()
@@ -31,22 +31,22 @@ func RateLimiterMiddleware(skippers ...SkipperFunc) engine.HandlerFunc {
 	limiter := redis_rate.NewLimiter(ring)
 	limiter.Fallback = rate.NewLimiter(rate.Inf, 0)
 
-	return func(c engine.Context) {
+	return func(c *gin.Context) {
 		if SkipHandler(c, skippers...) {
 			c.Next()
 			return
 		}
 
-		if user, ok := c.GetUserInfo(); ok {
+		if user, ok := helper.GetUserInfo(c); ok {
 			limit := conf.Count
 			rate, delay, allowed := limiter.AllowMinute(user.GetUserID(), limit)
 			if !allowed {
-				h := c.ResponseWriter().Header()
+				h := c.Writer.Header()
 				h.Set("X-RateLimit-Limit", strconv.FormatInt(limit, 10))
 				h.Set("X-RateLimit-Remaining", strconv.FormatInt(limit-rate, 10))
 				delaySec := int64(delay / time.Second)
 				h.Set("X-RateLimit-Delay", strconv.FormatInt(delaySec, 10))
-				result.ResError(c, result.Err429TooManyRequests)
+				helper.ResError(c, &helper.Err429TooManyRequests)
 				return
 			}
 		}

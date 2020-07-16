@@ -3,7 +3,9 @@ package auth
 import (
 	"errors"
 	"strings"
-	"zgo/engine"
+	"zgo/modules/helper"
+
+	"github.com/gin-gonic/gin"
 )
 
 // 定义错误
@@ -24,34 +26,34 @@ type TokenInfo interface {
 	EncodeToJSON() ([]byte, error)
 }
 
-// UserInfo 用户信息
+// UserInfo user
 type UserInfo interface {
-	engine.UserInfo
+	helper.UserInfo
 }
 
 // Auther 认证接口
 type Auther interface {
 	// GetUserInfo 获取用户ID
-	GetUserInfo(ctx engine.Context) (UserInfo, error)
+	GetUserInfo(c *gin.Context) (UserInfo, error)
 
 	// GetToken 获取用户令牌
-	GetToken(ctx engine.Context) string
+	GetToken(c *gin.Context) string
 
 	// GenerateToken 生成令牌
-	GenerateToken(ctx engine.Context, user UserInfo) (TokenInfo, error)
+	GenerateToken(c *gin.Context, user UserInfo) (TokenInfo, error)
 
 	// DestroyToken 销毁令牌
-	DestroyToken(ctx engine.Context, token string) error
+	DestroyToken(c *gin.Context, token string) error
 
 	// ParseUserInfo 解析用户信息
-	ParseUserInfo(ctx engine.Context, token string) (UserInfo, error)
+	ParseUserInfo(c *gin.Context, token string) (UserInfo, error)
 
 	// Release 释放资源
 	Release() error
 }
 
 // GetBearerToken 获取用户令牌
-func GetBearerToken(c engine.Context) string {
+func GetBearerToken(c *gin.Context) string {
 	var token string
 
 	prefix := "Bearer "
@@ -61,21 +63,21 @@ func GetBearerToken(c engine.Context) string {
 	return token
 }
 
-// GetQueryToke 获取用户令牌
-func GetQueryToke(c engine.Context) string {
+// GetQueryToken 获取用户令牌
+func GetQueryToken(c *gin.Context) string {
 	var token string
 
-	if auth := c.GetHeader("Authorization"); auth != "" {
+	if auth, ok := c.GetQuery("token"); ok {
 		token = auth
 	}
 	return token
 }
 
-// GetCookieToke 获取用户令牌
-func GetCookieToke(c engine.Context) string {
+// GetCookieToken 获取用户令牌
+func GetCookieToken(c *gin.Context) string {
 	var token string
 
-	if auth := c.GetHeader("Authorization"); auth != "" {
+	if auth, err := c.Cookie("authorization"); err != nil && auth != "" {
 		token = auth
 	}
 	return token

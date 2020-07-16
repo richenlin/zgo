@@ -2,16 +2,17 @@ package router
 
 import (
 	"net/http"
-	"zgo/engine"
+
+	"github.com/gin-gonic/gin"
 )
 
 // DemoAPI 根路由路由
-type DemoAPI engine.IRoutes
+type DemoAPI gin.IRoutes
 
 // NewDemoAPI 新建根路由
 func NewDemoAPI(r RootPath) DemoAPI {
-	r.GET("demo", func(ctx engine.Context) {
-		ctx.JSON(http.StatusOK, engine.H{
+	r.GET("demo", func(ctx *gin.Context) {
+		ctx.JSON(http.StatusOK, gin.H{
 			"message": "demo, world",
 		})
 	})

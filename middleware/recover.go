@@ -5,9 +5,10 @@ import (
 	"fmt"
 	"io/ioutil"
 	"runtime"
-	"zgo/engine"
+	"zgo/modules/helper"
 	"zgo/modules/logger"
-	"zgo/modules/result"
+
+	"github.com/gin-gonic/gin"
 )
 
 var (
@@ -18,13 +19,13 @@ var (
 )
 
 // RecoveryMiddleware 崩溃恢复中间件
-func RecoveryMiddleware() engine.HandlerFunc {
-	return func(c engine.Context) {
+func RecoveryMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
 		defer func() {
 			if err := recover(); err != nil {
 				stack := stack(3)
 				logger.StartTrace(c).WithField("stack", string(stack)).Errorf("[panic]: %v", err)
-				result.ResError(c, result.Err500InternalServer)
+				helper.ResError(c, &helper.Err500InternalServer)
 				// 结束
 			}
 		}()

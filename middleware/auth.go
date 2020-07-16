@@ -1,19 +1,20 @@
 package middleware
 
 import (
-	"zgo/engine"
 	"zgo/modules/auth"
 	"zgo/modules/config"
-	"zgo/modules/result"
+	"zgo/modules/helper"
+
+	"github.com/gin-gonic/gin"
 )
 
 // UserAuthMiddleware 用户授权中间件
-func UserAuthMiddleware(a auth.Auther, skippers ...SkipperFunc) engine.HandlerFunc {
+func UserAuthMiddleware(a auth.Auther, skippers ...SkipperFunc) gin.HandlerFunc {
 	if !config.C.JWTAuth.Enable {
 		return EmptyMiddleware()
 	}
 
-	return func(c engine.Context) {
+	return func(c *gin.Context) {
 		if SkipHandler(c, skippers...) {
 			c.Next()
 			return
@@ -22,13 +23,13 @@ func UserAuthMiddleware(a auth.Auther, skippers ...SkipperFunc) engine.HandlerFu
 		user, err := a.GetUserInfo(c)
 		if err != nil {
 			if err == auth.ErrInvalidToken || err == auth.ErrNoneToken {
-				result.ResError(c, result.Err401Unauthorized)
+				helper.ResError(c, &helper.Err401Unauthorized)
 				return
 			}
-			result.ResError(c, result.Err400BadRequest)
+			helper.ResError(c, &helper.Err400BadRequest)
 			return
 		}
-		c.SetUserInfo(user)
+		helper.SetUserInfo(c, user)
 
 		c.Next()
 	}
