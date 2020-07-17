@@ -1,7 +1,11 @@
 package casbin
 
 import (
+	"errors"
 	"time"
+
+	"github.com/suisrc/zgo/modules/logger"
+
 	"github.com/suisrc/zgo/modules/config"
 
 	"github.com/casbin/casbin/v2"
@@ -12,13 +16,15 @@ import (
 func NewCasbinEnforcer(adapter persist.Adapter) (*casbin.SyncedEnforcer, func(), error) {
 	c := config.C.Casbin
 	if c.Model == "" {
-		return new(casbin.SyncedEnforcer), nil, nil
+		// return new(casbin.SyncedEnforcer), func() {}, nil
+		return nil, nil, errors.New("Casbin Model no config")
 	}
 
 	enforcer, err := casbin.NewSyncedEnforcer(c.Model)
 	if err != nil {
 		return nil, nil, err
 	}
+	logger.Infof(nil, "Loading Casbin Model[%s]", c.Model)
 	enforcer.EnableLog(c.Debug)
 
 	err = enforcer.InitWithModelAndAdapter(enforcer.GetModel(), adapter)

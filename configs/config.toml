@@ -14,4 +14,5 @@ ShutdownTimeout = 30
 
 [Casbin]
 Enable = true
+#Model = "./configs/rbac_restful.conf"
 PolicySource = "./configs/rbac_policy.json"
