@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"strconv"
 	"zgo/modules/helper"
 
 	"github.com/gin-gonic/gin"
@@ -74,7 +75,7 @@ func FromTraceIDContext(ctx context.Context) string {
 	if v, ok := ctx.(*gin.Context); ok {
 		return helper.GetTraceID(v)
 	}
-	return "main-" + string(pid) // 系统上下文
+	return "main-" + strconv.Itoa(pid) // 系统上下文
 }
 
 // FromUserIDContext 从上下文中获取用户ID

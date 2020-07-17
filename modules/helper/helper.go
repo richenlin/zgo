@@ -1,6 +1,9 @@
 package helper
 
 import (
+	"log"
+	"strings"
+
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
@@ -36,4 +39,17 @@ func GetTraceID(c *gin.Context) string {
 	}
 	c.Set(TraceIDKey, traceID)
 	return traceID
+}
+
+// GetClientIP 获取客户端IP
+func GetClientIP(c *gin.Context) string {
+	if v, err := c.Cookie("X-Forwarded-For"); err != nil && v != "" {
+		log.Println(v)
+		len := strings.Index(v, ",")
+		if len < 0 {
+			return v
+		}
+		return v[:len]
+	}
+	return c.ClientIP()
 }

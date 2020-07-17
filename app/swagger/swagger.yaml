@@ -1,4 +1,4 @@
-basePath: /
+basePath: /api
 info:
   contact:
     email: susirc@outlook.com
@@ -7,10 +7,23 @@ info:
   license: {}
   title: zgo
   version: 0.0.1
-paths: {}
+paths:
+  /test/hello:
+    get:
+      consumes:
+      - application/json
+      description: Hello world
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+      summary: Hello
 schemes:
-- http
 - https
+- http
 securityDefinitions:
   ApiKeyAuth:
     in: header

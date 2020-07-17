@@ -27,13 +27,14 @@ func CopyBodyMiddleware(skippers ...SkipperFunc) gin.HandlerFunc {
 			return
 		}
 
+		if method := c.Request.Method; method == http.MethodGet {
+			c.Next()
+			return
+		}
 		// 跳过multipart/form-data数据
-		if method := c.Request.Method; method == http.MethodPost || method == http.MethodPut {
-			mediaType, _, _ := mime.ParseMediaType(c.GetHeader("Content-Type"))
-			if mediaType == "multipart/form-data" {
-				c.Next()
-				return
-			}
+		if mediaType, _, _ := mime.ParseMediaType(c.GetHeader("Content-Type")); mediaType == "multipart/form-data" {
+			c.Next()
+			return
 		}
 
 		// 没有body数据

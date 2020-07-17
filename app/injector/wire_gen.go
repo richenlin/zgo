@@ -8,17 +8,29 @@ package injector
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/wire"
+	"zgo/app/api"
+	"zgo/middlewire"
 )
 
 // Injectors from wire.go:
 
 func BuildInjector() (*Injector, func(), error) {
-	engine := InitGinEngine()
-	initRoutesOptions := &InitRoutesOptions{}
-	initRoutesResult := InitRoutesFunc(initRoutesOptions)
-	injector := &Injector{
+	engine := middlewire.InitGinEngine()
+	router := middlewire.NewRouter(engine)
+	hello := &api.Hello{}
+	options := &api.Options{
 		Engine: engine,
-		Routes: initRoutesResult,
+		Router: router,
+		Hello:  hello,
+	}
+	endpoints := api.InitEndpoints(options)
+	swagger := middlewire.NewSwagger(engine)
+	healthz := middlewire.NewHealthz(engine)
+	injector := &Injector{
+		Engine:    engine,
+		Endpoints: endpoints,
+		Swagger:   swagger,
+		Healthz:   healthz,
 	}
 	return injector, func() {
 	}, nil
@@ -27,10 +39,12 @@ func BuildInjector() (*Injector, func(), error) {
 // wire.go:
 
 // InjectorSet 注入Injector
-var InjectorSet = wire.NewSet(wire.Struct(new(Injector), "*"))
+var InjectorSet = wire.NewSet(wire.Struct(new(Injector), "*"), middlewire.NewSwagger, middlewire.NewHealthz)
 
 // Injector 注入器(用于初始化完成之后的引用)
 type Injector struct {
-	Engine *gin.Engine
-	Routes *InitRoutesResult
+	Engine    *gin.Engine
+	Endpoints *api.Endpoints
+	Swagger   middlewire.Swagger
+	Healthz   middlewire.Healthz
 }

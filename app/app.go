@@ -2,81 +2,44 @@ package app
 
 import (
 	"context"
-	"os"
-	"zgo/utils"
+	"zgo/app/injector"
+	cmd "zgo/modules/app"
+
+	"github.com/gin-gonic/gin"
 
 	// 引入swagger
 	_ "zgo/app/swagger"
-	// 引入app
-	"zgo/app/injector"
-	// 引入modules
-	"zgo/modules/config"
-	"zgo/modules/logger"
-	"zgo/modules/system"
 )
 
-type options struct {
-	ConfigFile string
-	Version    string
-}
-
-// Option 定义配置项
-type Option func(*options)
-
 // SetConfigFile 设定配置文件
-func SetConfigFile(s string) Option {
-	return func(o *options) {
+func SetConfigFile(s string) cmd.Option {
+	return func(o *cmd.Options) {
 		o.ConfigFile = s
 	}
 }
 
 // SetVersion 设定版本号
-func SetVersion(s string) Option {
-	return func(o *options) {
+func SetVersion(s string) cmd.Option {
+	return func(o *cmd.Options) {
 		o.Version = s
 	}
 }
 
-// RunServer 启动服务
-func RunServer(ctx context.Context, opts ...Option) (func(), error) {
-	var o options
-	for _, opt := range opts {
-		opt(&o)
+// SetBuildInjector 设定版本号
+func SetBuildInjector(f cmd.BuildInjector) cmd.Option {
+	return func(o *cmd.Options) {
+		o.BuildInjector = f
 	}
-	// 加载配置文件
-	config.MustLoad(o.ConfigFile)
-	config.PrintWithJSON()
-
-	// 启动日志
-	logger.Printf(ctx, "服务启动，运行模式：%s，版本号：%s，进程号：%d", config.C.RunMode, o.Version, os.Getpid())
-
-	utils.InitID()
-
-	// 初始化日志模块
-	loggerCleanFunc, err := InitLogger(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	// 初始化依赖注入器
-	injector, injectorCleanFunc, err := injector.BuildInjector()
-	if err != nil {
-		return nil, err
-	}
-
-	// 初始化HTTP服务
-	shutdownServerFunc := system.RunHTTPServer(ctx, injector.Engine)
-
-	return func() {
-		shutdownServerFunc()
-		injectorCleanFunc()
-		loggerCleanFunc()
-	}, nil
 }
 
 // Run 运行服务
-func Run(ctx context.Context, opts ...Option) error {
-	return system.Run(ctx, func() (func(), error) {
-		return RunServer(ctx, opts...)
+func Run(ctx context.Context, opts ...cmd.Option) error {
+	injectorOption := SetBuildInjector(func() (*gin.Engine, func(), error) {
+		injector, clean, err := injector.BuildInjector()
+		if err != nil {
+			return nil, nil, err
+		}
+		return injector.Engine, clean, err
 	})
+	return cmd.Run(ctx, append(opts, injectorOption)...)
 }

@@ -1,4 +1,4 @@
-package system
+package app
 
 import "zgo/modules/logger"
 

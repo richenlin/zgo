@@ -1,4 +1,4 @@
-package app
+package logger
 
 import (
 	"context"
@@ -6,7 +6,6 @@ import (
 	"os"
 	"path/filepath"
 	"zgo/modules/config"
-	"zgo/modules/logger"
 
 	logrus_syslog "github.com/sirupsen/logrus/hooks/syslog"
 )
@@ -14,17 +13,17 @@ import (
 // InitLogger 初始化日志模块
 func InitLogger(ctx context.Context) (func(), error) {
 	c := config.C.Logging
-	logger.SetLevel(c.Level)
-	logger.SetFormatter(c.Format)
+	SetLevel(c.Level)
+	SetFormatter(c.Format)
 
 	// 设定日志输出
 	var file *os.File
 	if c.Output != "" {
 		switch c.Output {
 		case "stdout":
-			logger.SetOutput(os.Stdout)
+			SetOutput(os.Stdout)
 		case "stderr":
-			logger.SetOutput(os.Stderr)
+			SetOutput(os.Stderr)
 		case "file":
 			if name := c.OutputFile; name != "" {
 				_ = os.MkdirAll(filepath.Dir(name), 0777)
@@ -33,7 +32,7 @@ func InitLogger(ctx context.Context) (func(), error) {
 				if err != nil {
 					return nil, err
 				}
-				logger.SetOutput(f)
+				SetOutput(f)
 				file = f
 			}
 		}
@@ -43,9 +42,9 @@ func InitLogger(ctx context.Context) (func(), error) {
 		pri := syslog.LOG_INFO
 		hook, err := logrus_syslog.NewSyslogHook(c.SyslogNetwork, c.SyslogAddr, pri, c.SyslogTag)
 		if err != nil {
-			logger.Errorf(ctx, "Unable to connect to local syslog daemon")
+			Errorf(ctx, "Unable to connect to local syslog daemon")
 		} else {
-			logger.AddHook(hook)
+			AddHook(hook)
 		}
 	}
 

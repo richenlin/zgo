@@ -10,7 +10,7 @@ import (
 
 // CORSMiddleware2 跨域
 // 不推荐使用, 可以使用gin中的跨域处理
-func CORSMiddleware2(root string, skippers ...SkipperFunc) gin.HandlerFunc {
+func CORSMiddleware2(skippers ...SkipperFunc) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		if SkipHandler(c, skippers...) {
 			c.Next()

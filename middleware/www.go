@@ -16,7 +16,7 @@ func WWWMiddleware(root string, skippers ...SkipperFunc) gin.HandlerFunc {
 			return
 		}
 		if root == "" {
-			root = config.C.WWW.Dir
+			root = config.C.WWW.RootDir
 		}
 
 		p := c.Request.URL.Path

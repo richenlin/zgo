@@ -3,9 +3,6 @@ module zgo
 go 1.14
 
 require (
-	github.com/LyricTian/gin-admin v1.1.0
-	github.com/LyricTian/gin-admin/v6 v6.4.3
-	github.com/LyricTian/gzip v0.1.1
 	github.com/NebulousLabs/fastrand v0.0.0-20181203155948-6fb6489aac4e
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
 	github.com/bwmarrin/snowflake v0.3.0
@@ -28,10 +25,13 @@ require (
 	github.com/google/subcommands v1.2.0 // indirect
 	github.com/google/uuid v1.1.1
 	github.com/google/wire v0.4.0
+	github.com/jawher/mow.cli v1.1.0
 	github.com/json-iterator/go v1.1.9
 	github.com/koding/multiconfig v0.0.0-20171124222453-69c27309b2d7
 	github.com/mailru/easyjson v0.7.1 // indirect
+	github.com/mattn/go-colorable v0.1.7 // indirect
 	github.com/memwey/casbin-sqlx-adapter v0.2.0
+	github.com/mgutz/ansi v0.0.0-20200706080929-d51e80ef957d
 	github.com/sirupsen/logrus v1.6.0
 	github.com/stretchr/testify v1.5.1
 	github.com/swaggo/gin-swagger v1.2.0

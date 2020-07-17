@@ -9,7 +9,7 @@ import (
 )
 
 // CORSMiddleware 跨域
-func CORSMiddleware(root string, skippers ...SkipperFunc) gin.HandlerFunc {
+func CORSMiddleware(skippers ...SkipperFunc) gin.HandlerFunc {
 	conf := config.C.CORS
 	return cors.New(cors.Config{
 		AllowOrigins:     conf.AllowOrigins,

@@ -27,7 +27,28 @@ var doc = `{
     },
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
-    "paths": {},
+    "paths": {
+        "/test/hello": {
+            "get": {
+                "description": "Hello world",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Hello",
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    },
     "securityDefinitions": {
         "ApiKeyAuth": {
             "type": "apiKey",
@@ -50,8 +71,8 @@ type swaggerInfo struct {
 var SwaggerInfo = swaggerInfo{
 	Version:     "0.0.1",
 	Host:        "",
-	BasePath:    "/",
-	Schemes:     []string{"http", "https"},
+	BasePath:    "/api",
+	Schemes:     []string{"https", "http"},
 	Title:       "zgo",
 	Description: "GIN + ENT/SQLX + CASBIN + WIRE",
 }

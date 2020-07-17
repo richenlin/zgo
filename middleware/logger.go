@@ -18,31 +18,25 @@ func LoggerMiddleware(skippers ...SkipperFunc) gin.HandlerFunc {
 
 		start := time.Now()
 		c.Next()
-		timeConsuming := time.Since(start).Nanoseconds() / 1e6
-
-		trace := logger.StartTrace(c)
-		path := c.Request.URL.Path
-		method := c.Request.Method
-		client := c.ClientIP()
-		status := c.Writer.Status
-		url := c.Request.URL.String()
 
 		fields := make(map[string]interface{})
-		fields["ip"] = client
-		fields["method"] = method
-		fields["url"] = url
+		fields["ip"] = helper.GetClientIP(c)
+		fields["method"] = c.Request.Method
+		fields["path"] = c.Request.URL.Path
+		fields["url"] = c.Request.URL.String()
 		if v, ok := c.Get(helper.ReqBodyKey); ok {
 			if b, ok := v.([]byte); ok {
 				fields["body"] = string(b)
 			}
 		}
-		fields["res_status"] = status
+		fields["res_status"] = c.Writer.Status()
+		fields["res_time"] = time.Since(start).Nanoseconds() / 1e6
 		if v, ok := c.Get(helper.ResBodyKey); ok {
 			if b, ok := v.([]byte); ok {
 				fields["res_body"] = string(b)
 			}
 		}
 
-		trace.WithFields(fields).Infof("[http] %s-%s-%s-%d(%dms)", path, method, client, status, timeConsuming)
+		logger.StartTrace(c).WithFields(fields).Infof("[access]")
 	}
 }

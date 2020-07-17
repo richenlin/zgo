@@ -5,7 +5,6 @@ import (
 	"os"
 	"zgo/app"
 	"zgo/modules/logger"
-	"zgo/modules/system"
 
 	"github.com/urfave/cli/v2"
 )
@@ -14,7 +13,6 @@ import (
 var VERSION = "0.0.1"
 
 func main() {
-	system.SetVersion(VERSION)
 	ctx := context.Background()
 
 	app := cli.NewApp()

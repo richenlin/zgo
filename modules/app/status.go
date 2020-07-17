@@ -1,4 +1,4 @@
-package system
+package app
 
 import (
 	"fmt"
@@ -11,8 +11,8 @@ var (
 	startTime = time.Now()
 )
 
-// AppStatus 应用状态
-type AppStatus struct {
+// Status 应用状态
+type Status struct {
 	Uptime       string
 	NumGoroutine int
 
@@ -54,8 +54,8 @@ type AppStatus struct {
 }
 
 // GetAppStatus 获取应用状态
-func GetAppStatus() AppStatus {
-	var app AppStatus
+func GetAppStatus() Status {
+	var app Status
 	//app.Uptime = utils.TimeSincePro(startTime, language.Lang[config.GetLanguage()])
 
 	m := new(runtime.MemStats)

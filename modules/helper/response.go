@@ -9,30 +9,30 @@ import (
 
 // ResError 包装响应错误
 func ResError(ctx *gin.Context, em *ErrorModel) error {
-	res := &ErrorInfo{
-		success:      false,
-		errorCode:    em.errorCode,
-		errorMessage: language.Sprintf(ctx, em.errorCode, em.errorMessage),
-		showType:     em.showType,
-		traceID:      GetTraceID(ctx),
+	res := ErrorInfo{
+		Success:      false,
+		ErrorCode:    em.ErrorCode,
+		ErrorMessage: language.Sprintf(ctx, em.ErrorCode, em.ErrorMessage),
+		ShowType:     em.ShowType,
+		TraceID:      GetTraceID(ctx),
 	}
 	//ctx.JSON(http.StatusOK, res)
 	//ctx.Abort()
-	ResJSON(ctx, em.status, res)
-	return res
+	ResJSON(ctx, em.Status, res)
+	return &res
 }
 
 // ResErrorResBody 包装响应错误
 func ResErrorResBody(ctx *gin.Context, em *ErrorModel) error {
-	res := &ErrorInfo{
-		success:      false,
-		errorCode:    em.errorCode,
-		errorMessage: language.Sprintf(ctx, em.errorCode, em.errorMessage),
-		showType:     em.showType,
-		traceID:      GetTraceID(ctx),
+	res := ErrorInfo{
+		Success:      false,
+		ErrorCode:    em.ErrorCode,
+		ErrorMessage: language.Sprintf(ctx, em.ErrorCode, em.ErrorMessage),
+		ShowType:     em.ShowType,
+		TraceID:      GetTraceID(ctx),
 	}
-	ResJSONResBody(ctx, em.status, res)
-	return res
+	ResJSONResBody(ctx, em.Status, res)
+	return &res
 }
 
 // ResJSONResBody 响应JSON数据

@@ -6,7 +6,7 @@ Package app 生成swagger文档
 使用方式：
 
 	go get -u github.com/swaggo/swag/cmd/swag
-	swag init --generalInfo ./internal/app/swagger.go --output ./internal/app/swagger
+	make swagger
 
 */
 package app
@@ -17,7 +17,7 @@ package app
 // @securityDefinitions.apikey ApiKeyAuth
 // @in header
 // @name Authorization
-// @schemes http https
-// @basePath /
+// @schemes https http
+// @basePath /api
 // @contact.name suisrc
 // @contact.email susirc@outlook.com

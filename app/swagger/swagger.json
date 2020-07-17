@@ -1,7 +1,7 @@
 {
     "schemes": [
-        "http",
-        "https"
+        "https",
+        "http"
     ],
     "swagger": "2.0",
     "info": {
@@ -14,8 +14,29 @@
         "license": {},
         "version": "0.0.1"
     },
-    "basePath": "/",
-    "paths": {},
+    "basePath": "/api",
+    "paths": {
+        "/test/hello": {
+            "get": {
+                "description": "Hello world",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Hello",
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    },
     "securityDefinitions": {
         "ApiKeyAuth": {
             "type": "apiKey",

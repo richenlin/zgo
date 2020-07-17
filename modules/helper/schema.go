@@ -24,9 +24,9 @@ const (
 
 // Result 正常请求结构体
 type Result struct {
-	success bool        // 请求成功, true
-	data    interface{} // 响应数据
-	traceID string      // 方便进行后端故障排除：唯一的请求ID
+	Success bool        // 请求成功, true
+	Data    interface{} // 响应数据
+	TraceID string      // 方便进行后端故障排除：唯一的请求ID
 }
 
 func (e *Result) Error() string {
@@ -35,23 +35,23 @@ func (e *Result) Error() string {
 
 // ErrorInfo 异常的请求结果体
 type ErrorInfo struct {
-	success      bool        // 请求成功, false
-	data         interface{} // 响应数据
-	errorCode    string      // 错误代码
-	errorMessage string      // 向用户显示消息
-	showType     int         //错误显示类型：0静音； 1条消息警告； 2消息错误； 4通知； 9页
-	traceID      string      // 方便进行后端故障排除：唯一的请求ID
+	Success      bool        `json:"success"`        // 请求成功, false
+	Data         interface{} `json:"data,omitempty"` // 响应数据
+	ErrorCode    string      `json:"errorCode"`      // 错误代码
+	ErrorMessage string      `json:"errorMessage"`   // 向用户显示消息
+	ShowType     int         `json:"showType"`       //错误显示类型：0静音； 1条消息警告； 2消息错误； 4通知； 9页
+	TraceID      string      `json:"traceId"`        // 方便进行后端故障排除：唯一的请求ID
 }
 
 func (e *ErrorInfo) Error() string {
-	return e.errorMessage
+	return e.ErrorMessage
 }
 
 // PaginationResult 响应列表数据
 //type PaginationResult struct {
 //	list  interface{} `json:"list"`
 //	total int         `json:"total"`
-//	sign  string      `json:"sign"`
+//	sign  string      `json:"sign,omitempty" binding:"required"`
 //}
 
 // PaginationParam 分页查询条件

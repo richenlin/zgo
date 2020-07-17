@@ -58,3 +58,6 @@ pack: build
 	rm -rf $(RELEASE_ROOT) && mkdir -p $(RELEASE_SERVER)
 	cp -r $(SERVER_BIN) configs $(RELEASE_SERVER)
 	cd $(RELEASE_ROOT) && tar -cvf $(APP).tar ${APP} && rm -rf ${APP}
+
+cli:
+	go run cmd/cli.go init

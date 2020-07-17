@@ -76,34 +76,33 @@ func PrintWithJSON() {
 
 // Config 配置参数
 type Config struct {
-	RunMode     string
-	Swagger     bool
-	PrintConfig bool
-	HTTP        HTTP
-	Casbin      Casbin
-	Logging     Logging
-	RateLimiter RateLimiter
-	JWTAuth     JWTAuth
-	CORS        CORS
-	GZIP        GZIP
-	Redis       Redis
-	MySQL       MySQL
-	Postgres    Postgres
-	Sqlite3     Sqlite3
-
-	Middle struct {
-		Logger  bool
-		Recover bool
-	}
-	WWW struct {
-		Index string
-		Dir   string
-	}
+	RunMode      string
+	Swagger      bool
+	PrintConfig  bool
+	HTTP         HTTP
+	Casbin       Casbin
+	Logging      Logging
+	RateLimiter  RateLimiter
+	JWTAuth      JWTAuth
+	CORS         CORS
+	GZIP         GZIP
+	Redis        Redis
+	MySQL        MySQL
+	Postgres     Postgres
+	Sqlite3      Sqlite3
+	WWW          WWW
+	MiddleConfig MiddleConfig
 }
 
 // IsDebugMode 是否是debug模式
 func (c *Config) IsDebugMode() bool {
 	return c.RunMode == "debug"
+}
+
+// MiddleConfig 中间件启动和关闭
+type MiddleConfig struct {
+	Logger  bool
+	Recover bool
 }
 
 // HTTP http配置参数
@@ -115,6 +114,7 @@ type HTTP struct {
 	ShutdownTimeout  int
 	MaxContentLength int64
 	ContextPath      string
+	Prefixes         []string
 }
 
 // Casbin casbin配置参数
@@ -182,6 +182,12 @@ type RateLimiter struct {
 type Redis struct {
 	Addr     string
 	Password string
+}
+
+// WWW 静态资源
+type WWW struct {
+	Index   string
+	RootDir string
 }
 
 //===============================================分割线
