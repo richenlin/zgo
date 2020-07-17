@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"os"
 	"strconv"
-	"github.com/suisrc/zgo/modules/helper"
 
 	"github.com/gin-gonic/gin"
 )
@@ -73,15 +72,15 @@ func SetVersion(v string) {
 // FromTraceIDContext 从上下文中获取跟踪ID
 func FromTraceIDContext(ctx context.Context) string {
 	if v, ok := ctx.(*gin.Context); ok {
-		return helper.GetTraceID(v)
+		return GetTraceID(v)
 	}
 	return "main-" + strconv.Itoa(pid) // 系统上下文
 }
 
 // FromUserIDContext 从上下文中获取用户ID
-func FromUserIDContext(ctx context.Context) (helper.UserInfo, bool) {
+func FromUserIDContext(ctx context.Context) (UserInfo, bool) {
 	if v, ok := ctx.(*gin.Context); ok {
-		return helper.GetUserInfo(v)
+		return GetUserInfo(v)
 	}
 	return nil, false
 }

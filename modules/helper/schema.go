@@ -1,13 +1,22 @@
 package helper
 
+import (
+	"github.com/suisrc/zgo/modules/logger"
+)
+
 // 定义上下文中的键
 const (
-	prefix      = "zgo"
-	UserInfoKey = prefix + "/user-info"
-	TraceIDKey  = prefix + "/tract-id"
-	ReqBodyKey  = prefix + "/req-body"
-	ResBodyKey  = prefix + "/res-body"
+	ReqBodyKey  = logger.Prefix + "/req-body"
+	ResBodyKey  = logger.Prefix + "/res-body"
+	UserInfoKey = logger.KeyUserInfo
+	TraceIDKey  = logger.KeyTraceID
 )
+
+// UserInfo 用户信息
+type UserInfo logger.UserInfo
+
+// UserInfoFunc user
+type UserInfoFunc logger.UserInfoFunc
 
 const (
 	// ShowNone 静音
@@ -60,16 +69,4 @@ type PaginationParam struct {
 	PageNo    uint   `query:"pageNo,default=1"`                      // 当前页
 	PageSize  uint   `query:"pageSize,default=20" binding:"max=100"` // 页大小
 	PageTotal uint   `query:"pageTotal"`                             // 上次统计的数据条数
-}
-
-// UserInfo 用户信息
-type UserInfo interface {
-	GetUserID() string
-	GetRoleID() string
-}
-
-// UserInfoFunc user
-type UserInfoFunc interface {
-	GetUserInfo() (UserInfo, bool)
-	SetUserInfo(UserInfo)
 }
