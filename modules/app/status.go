@@ -4,7 +4,8 @@ import (
 	"fmt"
 	"runtime"
 	"time"
-	"github.com/suisrc/zgo/utils"
+
+	"github.com/suisrc/zgo/modules/utils"
 )
 
 var (

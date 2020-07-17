@@ -10,18 +10,29 @@ import (
 	"github.com/google/wire"
 	"github.com/suisrc/zgo/app/api"
 	"github.com/suisrc/zgo/middlewire"
+	"github.com/suisrc/zgo/modules/casbin"
+	"github.com/suisrc/zgo/modules/casbin/adapter/json"
 )
 
 // Injectors from wire.go:
 
 func BuildInjector() (*Injector, func(), error) {
 	engine := middlewire.InitGinEngine()
+	adapter, err := casbinjson.NewCasbinAdapter()
+	if err != nil {
+		return nil, nil, err
+	}
+	syncedEnforcer, cleanup, err := casbin.NewCasbinEnforcer(adapter)
+	if err != nil {
+		return nil, nil, err
+	}
 	router := middlewire.NewRouter(engine)
 	hello := &api.Hello{}
 	options := &api.Options{
-		Engine: engine,
-		Router: router,
-		Hello:  hello,
+		Enforcer: syncedEnforcer,
+		Engine:   engine,
+		Router:   router,
+		Hello:    hello,
 	}
 	endpoints := api.InitEndpoints(options)
 	swagger := middlewire.NewSwagger(engine)
@@ -33,6 +44,7 @@ func BuildInjector() (*Injector, func(), error) {
 		Healthz:   healthz,
 	}
 	return injector, func() {
+		cleanup()
 	}, nil
 }
 

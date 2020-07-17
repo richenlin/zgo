@@ -20,7 +20,7 @@ func InitGinEngine() *gin.Engine {
 	app.Use(gin.Logger())
 	//app.Use(middleware.LoggerMiddleware())
 
-	//app.Use(gin.Recovery())
+	app.Use(gin.Recovery())
 	app.Use(middleware.RecoveryMiddleware())
 
 	return app

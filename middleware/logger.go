@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"time"
+
 	"github.com/suisrc/zgo/modules/helper"
 	"github.com/suisrc/zgo/modules/logger"
 
@@ -37,6 +38,6 @@ func LoggerMiddleware(skippers ...SkipperFunc) gin.HandlerFunc {
 			}
 		}
 
-		logger.StartTrace(c).WithFields(fields).Infof("[access]")
+		logger.StartTrace(c).WithFields(fields).Infof("访问日志")
 	}
 }

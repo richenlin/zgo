@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// GizMiddleware 跨域
+// GizMiddleware Giz, 主要部署前端时候(www中间件)对静态资源进行压缩
 func GizMiddleware(skippers ...SkipperFunc) gin.HandlerFunc {
 	conf := config.C.GZIP
 	return gzip.Gzip(gzip.BestCompression,

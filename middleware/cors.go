@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"time"
+
 	"github.com/suisrc/zgo/modules/config"
 
 	"github.com/gin-contrib/cors"

@@ -1,8 +1,11 @@
 package api
 
 import (
-	ser "github.com/suisrc/zgo/app/service"
+	"github.com/casbin/casbin/v2"
+	service "github.com/suisrc/zgo/app/service"
+	"github.com/suisrc/zgo/middleware"
 	"github.com/suisrc/zgo/middlewire"
+	casbinjson "github.com/suisrc/zgo/modules/casbin/adapter/json"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/wire"
@@ -10,9 +13,10 @@ import (
 
 // EndpointSet wire注入声明
 var EndpointSet = wire.NewSet(
-	ser.ServiceSet,                 // 系统提供的服务列表
+	service.ServiceSet,             // 系统提供的服务列表
 	wire.Struct(new(Options), "*"), // 初始化接口参数
 	InitEndpoints,                  // 初始化接口方法
+	casbinjson.CasbinAdapterSet,    // Casbin依赖
 
 	// 接口列表
 	HelloSet,
@@ -24,9 +28,10 @@ var EndpointSet = wire.NewSet(
 
 // Options options
 type Options struct {
-	Engine *gin.Engine
-	Router middlewire.Router
-	Hello  *Hello
+	Engine   *gin.Engine
+	Enforcer *casbin.SyncedEnforcer
+	Router   middlewire.Router
+	Hello    *Hello
 }
 
 // Endpoints result
@@ -37,8 +42,10 @@ type Endpoints struct {
 func InitEndpoints(o *Options) *Endpoints {
 
 	r := o.Router
+
 	test := r.Group("test")
 	{
+		test.Use(middleware.CasbinMiddleware(o.Enforcer))
 		test.GET("hello", o.Hello.Hello)
 		test.GET("hello2", o.Hello.Hello)
 	}

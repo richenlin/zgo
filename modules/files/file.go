@@ -10,7 +10,8 @@ import (
 	"os"
 	"path"
 	"sync"
-	"github.com/suisrc/zgo/utils"
+
+	"github.com/suisrc/zgo/modules/utils"
 )
 
 // Uploader is a file uploader which contains the method Upload.

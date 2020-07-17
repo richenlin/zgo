@@ -7,22 +7,11 @@ Swagger = false
 # 启动时是否打印配置参数
 PrintConfig = true
 
-# 静态站点目录(也可以启动服务时使用-www指定)
-[WWW]
-Index = "index.html"
-
 [HTTP]
-# http监听地址
 Host = "0.0.0.0"
-# http监听端口
 Port = 8081
-# context
-# ContextPath = "api/v1"
-# 证书路径
-CertFile = ""
-# 证书密钥
-KeyFile = ""
-# http优雅关闭等待超时时长(单位秒)
 ShutdownTimeout = 30
-# 允许的最大内容长度(64M)
-MaxContentLength = 67108864
+
+[Casbin]
+Enable = true
+PolicySource = "./configs/rbac_policy.json"

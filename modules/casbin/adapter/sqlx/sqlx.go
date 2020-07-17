@@ -2,6 +2,7 @@ package casbinsqlx
 
 import (
 	"errors"
+
 	"github.com/suisrc/zgo/modules/casbin"
 	"github.com/suisrc/zgo/modules/config"
 
@@ -22,7 +23,7 @@ func NewCasbinAdapter() (persist.Adapter, error) {
 	pSource := config.C.Casbin.PolicySource
 	pTable := config.C.Casbin.PolicyTable
 	if pType == "" || pSource == "" {
-		return nil, errors.New("Casbin.PlicyType OR Casbin.PlicySource has Empty")
+		return nil, errors.New("Casbin.PlicyType OR Casbin.PolicySource has Empty")
 	}
 	if pTable == "" {
 		pTable = "casbin_rule"

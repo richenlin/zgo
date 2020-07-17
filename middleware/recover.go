@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"runtime"
+
 	"github.com/suisrc/zgo/modules/helper"
 	"github.com/suisrc/zgo/modules/logger"
 
@@ -32,6 +33,10 @@ func RecoveryMiddleware() gin.HandlerFunc {
 		c.Next()
 	}
 }
+
+//===============
+// gin.Revovery
+//===============
 
 // stack returns a nicely formatted stack frame, skipping skip frames.
 func stack(skip int) []byte {
@@ -84,8 +89,8 @@ func function(pc uintptr) []byte {
 	//	*T.ptrmethod
 	// Also the package path might contains dot (e.g. code.google.com/...),
 	// so first eliminate the path prefix
-	if lastslash := bytes.LastIndex(name, slash); lastslash >= 0 {
-		name = name[lastslash+1:]
+	if lastSlash := bytes.LastIndex(name, slash); lastSlash >= 0 {
+		name = name[lastSlash+1:]
 	}
 	if period := bytes.Index(name, dot); period >= 0 {
 		name = name[period+1:]
