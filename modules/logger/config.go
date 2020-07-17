@@ -5,7 +5,7 @@ import (
 	"log/syslog"
 	"os"
 	"path/filepath"
-	"zgo/modules/config"
+	"github.com/suisrc/zgo/modules/config"
 
 	logrus_syslog "github.com/sirupsen/logrus/hooks/syslog"
 )

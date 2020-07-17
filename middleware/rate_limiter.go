@@ -3,8 +3,8 @@ package middleware
 import (
 	"strconv"
 	"time"
-	"zgo/modules/config"
-	"zgo/modules/helper"
+	"github.com/suisrc/zgo/modules/config"
+	"github.com/suisrc/zgo/modules/helper"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis"

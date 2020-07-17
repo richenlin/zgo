@@ -2,8 +2,8 @@ package casbinsqlx
 
 import (
 	"errors"
-	"zgo/modules/casbin"
-	"zgo/modules/config"
+	"github.com/suisrc/zgo/modules/casbin"
+	"github.com/suisrc/zgo/modules/config"
 
 	"github.com/casbin/casbin/v2/persist"
 	"github.com/google/wire"

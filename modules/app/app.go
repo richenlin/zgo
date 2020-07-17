@@ -9,8 +9,8 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
-	"zgo/modules/config"
-	"zgo/modules/logger"
+	"github.com/suisrc/zgo/modules/config"
+	"github.com/suisrc/zgo/modules/logger"
 
 	"github.com/gin-gonic/gin"
 )

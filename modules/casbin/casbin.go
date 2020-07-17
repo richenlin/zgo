@@ -2,7 +2,7 @@ package casbin
 
 import (
 	"time"
-	"zgo/modules/config"
+	"github.com/suisrc/zgo/modules/config"
 
 	"github.com/casbin/casbin/v2"
 	"github.com/casbin/casbin/v2/persist"

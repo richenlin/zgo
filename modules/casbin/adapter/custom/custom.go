@@ -1,7 +1,7 @@
 package casbincustom
 
 import (
-	"zgo/modules/casbin"
+	"github.com/suisrc/zgo/modules/casbin"
 
 	"github.com/casbin/casbin/v2/persist"
 

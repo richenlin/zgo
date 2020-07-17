@@ -3,7 +3,7 @@ package middleware
 import (
 	"os"
 	"path/filepath"
-	"zgo/modules/config"
+	"github.com/suisrc/zgo/modules/config"
 
 	"github.com/gin-gonic/gin"
 )

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
-	"zgo/modules/helper"
+	"github.com/suisrc/zgo/modules/helper"
 
 	"github.com/gin-gonic/gin"
 )

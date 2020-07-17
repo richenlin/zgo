@@ -2,7 +2,7 @@ package helper
 
 import (
 	"net/http"
-	"zgo/modules/language"
+	"github.com/suisrc/zgo/modules/language"
 
 	"github.com/gin-gonic/gin"
 )

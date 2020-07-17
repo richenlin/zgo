@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"zgo/modules/config"
+	"github.com/suisrc/zgo/modules/config"
 
 	"github.com/LyricTian/gzip"
 	"github.com/gin-gonic/gin"

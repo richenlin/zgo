@@ -15,8 +15,8 @@ package injector
 	5.wire_gen.go文件不要编辑,为自动生成
 */
 import (
-	"zgo/app/api"
-	"zgo/middlewire"
+	"github.com/suisrc/zgo/app/api"
+	"github.com/suisrc/zgo/middlewire"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/wire"

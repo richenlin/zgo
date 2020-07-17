@@ -1,8 +1,9 @@
-module zgo
+module github.com/suisrc/zgo
 
 go 1.14
 
 require (
+	github.com/LyricTian/gzip v0.1.1
 	github.com/NebulousLabs/fastrand v0.0.0-20181203155948-6fb6489aac4e
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
 	github.com/bwmarrin/snowflake v0.3.0

@@ -13,7 +13,7 @@ Package app 生成swagger文档
 
 */
 import (
-	"zgo/modules/config"
+	"github.com/suisrc/zgo/modules/config"
 
 	"github.com/gin-gonic/gin"
 	ginSwagger "github.com/swaggo/gin-swagger"

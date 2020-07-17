@@ -1,7 +1,7 @@
 package casbinredis
 
 import (
-	"zgo/modules/casbin"
+	"github.com/suisrc/zgo/modules/casbin"
 
 	"github.com/casbin/casbin/v2/persist"
 	redis "github.com/casbin/redis-adapter/v2"

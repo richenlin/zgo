@@ -3,8 +3,8 @@ package main
 import (
 	"context"
 	"os"
-	"zgo/app"
-	"zgo/modules/logger"
+	"github.com/suisrc/zgo/app"
+	"github.com/suisrc/zgo/modules/logger"
 
 	"github.com/urfave/cli/v2"
 )

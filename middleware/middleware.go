@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"zgo/modules/helper"
+	"github.com/suisrc/zgo/modules/helper"
 
 	"github.com/gin-gonic/gin"
 )

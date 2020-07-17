@@ -1,6 +1,6 @@
 package app
 
-import "zgo/modules/logger"
+import "github.com/suisrc/zgo/modules/logger"
 
 // 服务器版本
 var version = "0.0.1"

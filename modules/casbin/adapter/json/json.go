@@ -2,9 +2,9 @@ package casbinjson
 
 import (
 	"io/ioutil"
-	"zgo/modules/casbin"
-	"zgo/modules/config"
-	"zgo/modules/files"
+	"github.com/suisrc/zgo/modules/casbin"
+	"github.com/suisrc/zgo/modules/config"
+	"github.com/suisrc/zgo/modules/files"
 
 	"github.com/casbin/casbin/v2/persist"
 	json "github.com/casbin/json-adapter/v2"

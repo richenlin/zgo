@@ -1,8 +1,8 @@
 package middleware
 
 import (
-	"zgo/modules/config"
-	"zgo/modules/helper"
+	"github.com/suisrc/zgo/modules/config"
+	"github.com/suisrc/zgo/modules/helper"
 
 	"github.com/casbin/casbin/v2"
 	"github.com/gin-gonic/gin"

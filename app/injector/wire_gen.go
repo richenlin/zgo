@@ -8,8 +8,8 @@ package injector
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/wire"
-	"zgo/app/api"
-	"zgo/middlewire"
+	"github.com/suisrc/zgo/app/api"
+	"github.com/suisrc/zgo/middlewire"
 )
 
 // Injectors from wire.go:

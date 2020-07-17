@@ -2,8 +2,8 @@ package middlewire
 
 // 系统默认根路由
 import (
-	"zgo/middleware"
-	"zgo/modules/config"
+	"github.com/suisrc/zgo/middleware"
+	"github.com/suisrc/zgo/modules/config"
 
 	"github.com/gin-gonic/gin"
 )

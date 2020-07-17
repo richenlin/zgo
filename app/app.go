@@ -2,13 +2,13 @@ package app
 
 import (
 	"context"
-	"zgo/app/injector"
-	cmd "zgo/modules/app"
+	"github.com/suisrc/zgo/app/injector"
+	cmd "github.com/suisrc/zgo/modules/app"
 
 	"github.com/gin-gonic/gin"
 
 	// 引入swagger
-	_ "zgo/app/swagger"
+	_ "github.com/suisrc/zgo/app/swagger"
 )
 
 // SetConfigFile 设定配置文件

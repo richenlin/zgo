@@ -7,8 +7,8 @@ import (
 	"io/ioutil"
 	"mime"
 	"net/http"
-	"zgo/modules/config"
-	"zgo/modules/helper"
+	"github.com/suisrc/zgo/modules/config"
+	"github.com/suisrc/zgo/modules/helper"
 
 	"github.com/gin-gonic/gin"
 )

@@ -1,8 +1,8 @@
 package api
 
 import (
-	ser "zgo/app/service"
-	"zgo/middlewire"
+	ser "github.com/suisrc/zgo/app/service"
+	"github.com/suisrc/zgo/middlewire"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/wire"

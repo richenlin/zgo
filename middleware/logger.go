@@ -2,8 +2,8 @@ package middleware
 
 import (
 	"time"
-	"zgo/modules/helper"
-	"zgo/modules/logger"
+	"github.com/suisrc/zgo/modules/helper"
+	"github.com/suisrc/zgo/modules/logger"
 
 	"github.com/gin-gonic/gin"
 )

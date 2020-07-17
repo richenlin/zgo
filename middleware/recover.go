@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"runtime"
-	"zgo/modules/helper"
-	"zgo/modules/logger"
+	"github.com/suisrc/zgo/modules/helper"
+	"github.com/suisrc/zgo/modules/logger"
 
 	"github.com/gin-gonic/gin"
 )

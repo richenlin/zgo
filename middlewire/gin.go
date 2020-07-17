@@ -2,8 +2,8 @@ package middlewire
 
 // 对gin进行初始化
 import (
-	"zgo/middleware"
-	"zgo/modules/config"
+	"github.com/suisrc/zgo/middleware"
+	"github.com/suisrc/zgo/modules/config"
 
 	"github.com/gin-gonic/gin"
 )
