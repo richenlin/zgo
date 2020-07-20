@@ -1,23 +1,5 @@
 package helper
 
-import (
-	"github.com/suisrc/zgo/modules/logger"
-)
-
-// 定义上下文中的键
-const (
-	ReqBodyKey  = logger.Prefix + "/req-body"
-	ResBodyKey  = logger.Prefix + "/res-body"
-	UserInfoKey = logger.KeyUserInfo
-	TraceIDKey  = logger.KeyTraceID
-)
-
-// UserInfo 用户信息
-type UserInfo logger.UserInfo
-
-// UserInfoFunc user
-type UserInfoFunc logger.UserInfoFunc
-
 const (
 	// ShowNone 静音
 	ShowNone = 0

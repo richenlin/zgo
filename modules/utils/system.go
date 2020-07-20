@@ -17,10 +17,13 @@ import (
 	"github.com/NebulousLabs/fastrand"
 )
 
-func Uuid(length int64) string {
-	ele := []string{"1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "v", "k",
-		"l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "Driver", "E", "F", "G",
-		"H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"}
+// UUID uuid
+func UUID(length int64) string {
+	ele := []string{"0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
+		"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n",
+		"o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
+		"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N",
+		"O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"}
 	ele, _ = Random(ele)
 	uuid := ""
 	var i int64
@@ -30,6 +33,7 @@ func Uuid(length int64) string {
 	return uuid
 }
 
+// Random random
 func Random(strings []string) ([]string, error) {
 	for i := len(strings) - 1; i > 0; i-- {
 		num := fastrand.Intn(i + 1)
@@ -43,6 +47,7 @@ func Random(strings []string) ([]string, error) {
 	return str, nil
 }
 
+// CompressedContent compressed comtent
 func CompressedContent(h *template.HTML) {
 	st := strings.Split(string(*h), "\n")
 	var ss []string
@@ -55,6 +60,7 @@ func CompressedContent(h *template.HTML) {
 	*h = template.HTML(strings.Join(ss, "\n"))
 }
 
+// ReplaceNth replace nth
 func ReplaceNth(s, old, new string, n int) string {
 	i := 0
 	for m := 1; m <= n; m++ {
@@ -71,6 +77,7 @@ func ReplaceNth(s, old, new string, n int) string {
 	return s
 }
 
+// InArray in array
 func InArray(arr []string, str string) bool {
 	for _, v := range arr {
 		if v == str {
@@ -80,6 +87,7 @@ func InArray(arr []string, str string) bool {
 	return false
 }
 
+// WrapURL warp url
 func WrapURL(u string) string {
 	uarr := strings.Split(u, "?")
 	if len(uarr) < 2 {
@@ -93,6 +101,7 @@ func WrapURL(u string) string {
 		strings.Replace(v.Encode(), "%7B%7B.Id%7D%7D", "{{.Id}}", -1)
 }
 
+// JSON json
 func JSON(a interface{}) string {
 	if a == nil {
 		return ""
@@ -101,28 +110,25 @@ func JSON(a interface{}) string {
 	return string(b)
 }
 
+// ParseBool parse bool
 func ParseBool(s string) bool {
 	b1, _ := strconv.ParseBool(s)
 	return b1
 }
 
+// ParseFloat32 parse float
 func ParseFloat32(f string) float32 {
 	s, _ := strconv.ParseFloat(f, 32)
 	return float32(s)
 }
 
-func SetDefault(value, condition, def string) string {
-	if value == condition {
-		return def
-	}
-	return value
-}
-
+// IsJSON is json
 func IsJSON(str string) bool {
 	var js json.RawMessage
 	return json.Unmarshal([]byte(str), &js) == nil
 }
 
+// CopyMap copy map
 func CopyMap(m map[string]string) map[string]string {
 	var buf bytes.Buffer
 	enc := gob.NewEncoder(&buf)
@@ -139,6 +145,7 @@ func CopyMap(m map[string]string) map[string]string {
 	return cm
 }
 
+// CompareVersion compare version
 func CompareVersion(src, toCompare string) bool {
 	if toCompare == "" {
 		return false
@@ -200,12 +207,19 @@ func CompareVersion(src, toCompare string) bool {
 }
 
 const (
-	Byte  = 1
+	// Byte byte
+	Byte = 1
+	// KByte kbyte
 	KByte = Byte * 1024
+	// MByte mbyte
 	MByte = KByte * 1024
+	// GByte gbyte
 	GByte = MByte * 1024
+	// TByte tbyte
 	TByte = GByte * 1024
+	// PByte pbyte
 	PByte = TByte * 1024
+	// EByte ebyte
 	EByte = PByte * 1024
 )
 
@@ -244,6 +258,7 @@ func FileSize(s uint64) string {
 	return humanateBytes(s, 1024, sizes)
 }
 
+// FileExist file exist
 func FileExist(path string) bool {
 	_, err := os.Stat(path)
 	if err != nil {

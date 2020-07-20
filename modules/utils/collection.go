@@ -5,6 +5,7 @@ import (
 	"encoding/gob"
 )
 
+// Collection collection
 type Collection []map[string]interface{}
 
 // Where filters the collection by a given key / value pair.
@@ -35,10 +36,12 @@ func (c Collection) Where(key string, values ...interface{}) Collection {
 	return d
 }
 
+// Length length
 func (c Collection) Length() int {
 	return len(c)
 }
 
+// FirstGet first get
 func (c Collection) FirstGet(key string) interface{} {
 	return c[0][key]
 }

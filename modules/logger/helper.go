@@ -1,5 +1,6 @@
 package logger
 
+// @see github.com/suisrc/zgo/modules/helper/helper.go
 import (
 	"log"
 	"strings"
@@ -21,23 +22,12 @@ type UserInfo interface {
 	GetRoleID() string
 }
 
-// UserInfoFunc user
-type UserInfoFunc interface {
-	GetUserInfo() (UserInfo, bool)
-	SetUserInfo(UserInfo)
-}
-
 // GetUserInfo 用户
 func GetUserInfo(c *gin.Context) (UserInfo, bool) {
 	if v, ok := c.Get(KeyUserInfo); ok {
 		return v.(UserInfo), true
 	}
 	return nil, false
-}
-
-// SetUserInfo 用户
-func SetUserInfo(c *gin.Context, user UserInfo) {
-	c.Set(KeyUserInfo, user)
 }
 
 // GetTraceID 根据山下问,获取追踪ID

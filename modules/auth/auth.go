@@ -1,84 +1,61 @@
 package auth
 
 import (
+	"context"
 	"errors"
-	"strings"
-	"github.com/suisrc/zgo/modules/helper"
-
-	"github.com/gin-gonic/gin"
 )
 
 // 定义错误
 var (
+	// ErrInvalidToken 无效令牌
 	ErrInvalidToken = errors.New("invalid token")
-	ErrNoneToken    = errors.New("none token")
+	// ErrNoneToken 没有令牌
+	ErrNoneToken = errors.New("none token")
 )
 
 // TokenInfo 令牌信息
 type TokenInfo interface {
 	// 获取访问令牌
-	GetToken() string
+	GetAccessToken() string
 	// 获取令牌类型
 	GetTokenType() string
 	// 获取令牌到期时间戳
 	GetExpiresAt() int64
-	// JSON编码
+	// JSON
 	EncodeToJSON() ([]byte, error)
 }
 
 // UserInfo user
 type UserInfo interface {
-	helper.UserInfo
+	//helper.UserInfo
+
+	// GetUserName 用户名
+	GetUserName() string
+
+	// GetUserID 用户ID
+	GetUserID() string
+	// GetRoleID 角色ID
+	GetRoleID() string
+	// GetTokenID 令牌ID, 主要用于验证或者销毁令牌等关于令牌的操作
+	GetTokenID() string
+
+	// GetProps() 获取私有属性,该内容会被加密, 注意:内容敏感,不要存储太多的内容
+	GetProps() (interface{}, bool)
+
+	// 令牌签发者
+	GetIssuer() string
+	// 令牌接收者
+	GetAudience() string
 }
 
 // Auther 认证接口
 type Auther interface {
-	// GetUserInfo 获取用户ID
-	GetUserInfo(c *gin.Context) (UserInfo, error)
-
-	// GetToken 获取用户令牌
-	GetToken(c *gin.Context) string
+	// GetUserInfo 获取用户
+	GetUserInfo(c context.Context) (UserInfo, error)
 
 	// GenerateToken 生成令牌
-	GenerateToken(c *gin.Context, user UserInfo) (TokenInfo, error)
+	GenerateToken(c context.Context, u UserInfo) (TokenInfo, error)
 
 	// DestroyToken 销毁令牌
-	DestroyToken(c *gin.Context, token string) error
-
-	// ParseUserInfo 解析用户信息
-	ParseUserInfo(c *gin.Context, token string) (UserInfo, error)
-
-	// Release 释放资源
-	Release() error
-}
-
-// GetBearerToken 获取用户令牌
-func GetBearerToken(c *gin.Context) string {
-	var token string
-
-	prefix := "Bearer "
-	if auth := c.GetHeader("Authorization"); auth != "" && strings.HasPrefix(auth, prefix) {
-		token = auth[len(prefix):]
-	}
-	return token
-}
-
-// GetQueryToken 获取用户令牌
-func GetQueryToken(c *gin.Context) string {
-	var token string
-
-	if auth, ok := c.GetQuery("token"); ok {
-		token = auth
-	}
-	return token
-}
-
-// GetCookieToken 获取用户令牌
-func GetCookieToken(c *gin.Context) string {
-	var token string
-
-	if auth, err := c.Cookie("authorization"); err != nil && auth != "" {
-		token = auth
-	}
-	return token
+	DestroyToken(c context.Context, u UserInfo) error
 }

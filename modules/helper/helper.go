@@ -8,6 +8,27 @@ import (
 	"github.com/google/uuid"
 )
 
+// 定义上下文中的键
+const (
+	Prefix      = "zgo"
+	UserInfoKey = Prefix + "/user-info"
+	TraceIDKey  = Prefix + "/tract-id"
+	ReqBodyKey  = Prefix + "/req-body"
+	ResBodyKey  = Prefix + "/res-body"
+)
+
+// UserInfo 用户信息
+type UserInfo interface {
+	GetUserID() string
+	GetRoleID() string
+}
+
+// UserInfoFunc user
+type UserInfoFunc interface {
+	GetUserInfo() (UserInfo, bool)
+	SetUserInfo(UserInfo)
+}
+
 // GetUserInfo 用户
 func GetUserInfo(c *gin.Context) (UserInfo, bool) {
 	if v, ok := c.Get(UserInfoKey); ok {

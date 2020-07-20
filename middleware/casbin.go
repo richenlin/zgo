@@ -27,6 +27,7 @@ func CasbinMiddleware(enforcer *casbin.SyncedEnforcer, skippers ...SkipperFunc) 
 			return
 		}
 
+		//i := u.GetUserID()
 		r := u.GetRoleID()
 		p := c.Request.URL.Path
 		m := c.Request.Method

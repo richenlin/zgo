@@ -37,6 +37,7 @@ require (
 	github.com/stretchr/testify v1.5.1
 	github.com/swaggo/gin-swagger v1.2.0
 	github.com/swaggo/swag v1.6.7
+	github.com/tidwall/buntdb v1.1.2
 	github.com/urfave/cli/v2 v2.2.0
 	go.mongodb.org/mongo-driver v1.3.3
 	golang.org/x/net v0.0.0-20200707034311-ab3426394381 // indirect
