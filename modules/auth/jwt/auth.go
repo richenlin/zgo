@@ -1,5 +1,8 @@
 package jwt
 
+/*
+ 为什么使用反向验证(只记录登出的用户, 因为我们确信点击登出的操作比点击登陆的操作要少的多的多)
+*/
 import (
 	"context"
 	"time"
@@ -126,6 +129,7 @@ func (a *Auther) GetUserInfo(c context.Context) (auth.UserInfo, error) {
 	}
 
 	err = a.callStore(func(store Storer) error {
+		// 反向验证该用户是否已经登出
 		if exists, err := store.Check(c, claims.GetTokenID()); err != nil {
 			return err
 		} else if exists {
