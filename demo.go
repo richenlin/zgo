@@ -1,5 +1,10 @@
 package main
 
+/*
+ 这仅仅是一个例子,不推荐使用该方法处理服务器,启动时候,推荐使用make run方式启动
+ 这仅仅是一个例子,不推荐使用该方法处理服务器,启动时候,推荐使用make run方式启动
+ 这仅仅是一个例子,不推荐使用该方法处理服务器,启动时候,推荐使用make run方式启动
+*/
 import (
 	"context"
 
@@ -23,6 +28,10 @@ func main() {
 		return
 	}
 	// middlewire.NewSwagger(a)
+
+	// defer c()
+	// a.Run(":80")
+	// 相对优雅的关闭服务器
 	runApp(a, c)
 }
 
@@ -32,7 +41,7 @@ func init() {
 }
 
 func router(router gin.IRouter) (func(), error) {
-
+	// do nothing
 	return func() {}, nil
 }
 
@@ -68,7 +77,6 @@ func newApp() *gin.Engine {
 func runApp(a *gin.Engine, clean func()) {
 	ctx := context.Background()
 	err := cmd.RunWithShutdown(ctx, func() (func(), error) {
-		//a.Run(":80") // 监听并在 0.0.0.0:80 上启动服务
 		shutdownServerFunc := cmd.RunHTTPServer(ctx, a)
 		return func() {
 			shutdownServerFunc()
