@@ -29,8 +29,8 @@ func BuildInjector() (*Injector, func(), error) {
 	router := middlewire.NewRouter(engine)
 	hello := &api.Hello{}
 	options := &api.Options{
-		Enforcer: syncedEnforcer,
 		Engine:   engine,
+		Enforcer: syncedEnforcer,
 		Router:   router,
 		Hello:    hello,
 	}

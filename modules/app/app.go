@@ -9,6 +9,7 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
+
 	"github.com/suisrc/zgo/modules/config"
 	"github.com/suisrc/zgo/modules/logger"
 
@@ -29,7 +30,7 @@ func RunHTTPServer(ctx context.Context, handler http.Handler) func() {
 	}
 
 	go func() {
-		logger.Printf(ctx, "HTTP Server is running at %s.", addr)
+		logger.Printf(ctx, "http server is running at %s.", addr)
 		var err error
 		if conf.CertFile != "" && conf.KeyFile != "" {
 			srv.TLSConfig = &tls.Config{MinVersion: tls.VersionTLS12}
@@ -64,11 +65,11 @@ func RunWithShutdown(ctx context.Context, runServer func() (func(), error)) erro
 	}
 
 	sig := <-sc // 等待服务器中断
-	logger.Printf(ctx, "Received a signal [%s]", sig.String())
+	logger.Printf(ctx, "received a signal [%s]", sig.String())
 	// 结束服务
-	logger.Printf(ctx, "HTTP Server shutdown ...")
+	logger.Printf(ctx, "http server shutdown ...")
 	shutdownServer()
-	logger.Printf(ctx, "HTTP Server exiting")
+	logger.Printf(ctx, "http server exiting")
 	time.Sleep(time.Second) // 延迟1s, 用于日志等信息保存
 	return nil
 }
@@ -109,7 +110,7 @@ func RunServer(ctx context.Context, opts ...Option) (func(), error) {
 	config.PrintWithJSON()
 
 	// 启动日志
-	logger.Printf(ctx, "HTTP Server startup, M[%s]-V[%s]-P[%d]", config.C.RunMode, o.Version, os.Getpid())
+	logger.Printf(ctx, "http server startup, M[%s]-V[%s]-P[%d]", config.C.RunMode, o.Version, os.Getpid())
 
 	// 初始化日志模块
 	loggerCleanFunc, err := logger.InitLogger(ctx)

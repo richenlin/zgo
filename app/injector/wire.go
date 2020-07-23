@@ -49,8 +49,6 @@ func BuildInjector() (*Injector, func(), error) {
 		InjectorSet,              // wire索引
 		middlewire.DefaultGinSet, // gin引擎
 		api.EndpointSet,          // 服务接口
-		//casbin内容
-		//casbinsqlx.CasbinAdapterSet,
 	)
 	return new(Injector), nil, nil
 }

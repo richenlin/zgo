@@ -14,8 +14,8 @@ import (
 
 // Config 配置
 type Config struct {
-	AddrURL    string // 服务器地址 http://abc.cn/api/auth/store
-	Middleware goutapi.RequestMiddler
+	AddrURL    string                 // 服务器地址 http://abc.cn/api/auth/store
+	Middleware goutapi.RequestMiddler // 可以增加远程调用规则和权限
 }
 
 // NewStore store

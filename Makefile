@@ -42,7 +42,7 @@ wire:
 # entc init User
 # generate the schema for User under <project>/ent/schema/
 entc:
-	go generate ./ent
+	go generate ./app/ent
 
 # go get -u github.com/mdempsky/gocode
 code:

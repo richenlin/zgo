@@ -2,7 +2,7 @@ package api
 
 import (
 	"github.com/casbin/casbin/v2"
-	service "github.com/suisrc/zgo/app/service"
+	service "github.com/suisrc/zgo/app/ser"
 	"github.com/suisrc/zgo/middleware"
 	"github.com/suisrc/zgo/middlewire"
 	casbinjson "github.com/suisrc/zgo/modules/casbin/adapter/json"
@@ -18,8 +18,8 @@ var EndpointSet = wire.NewSet(
 	InitEndpoints,                  // 初始化接口方法
 	casbinjson.CasbinAdapterSet,    // Casbin依赖
 
-	// 接口列表
-	HelloSet,
+	// 接口注册
+	wire.Struct(new(Hello), "*"),
 )
 
 //=====================================
@@ -40,7 +40,6 @@ type Endpoints struct {
 
 // InitEndpoints init
 func InitEndpoints(o *Options) *Endpoints {
-
 	r := o.Router
 
 	test := r.Group("test")

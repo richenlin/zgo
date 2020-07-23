@@ -14,6 +14,7 @@ require (
 	github.com/casbin/redis-adapter/v2 v2.0.1
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/facebookincubator/ent v0.2.7
 	github.com/fatih/camelcase v1.0.0 // indirect
 	github.com/fatih/structs v1.1.0 // indirect
 	github.com/gin-contrib/cors v1.3.1
@@ -28,12 +29,15 @@ require (
 	github.com/google/wire v0.4.0
 	github.com/guonaihong/gout v0.1.1
 	github.com/jawher/mow.cli v1.1.0
+	github.com/jmoiron/sqlx v1.2.0
 	github.com/json-iterator/go v1.1.9
 	github.com/koding/multiconfig v0.0.0-20171124222453-69c27309b2d7
 	github.com/mailru/easyjson v0.7.1 // indirect
 	github.com/mattn/go-colorable v0.1.7 // indirect
+	github.com/mattn/go-sqlite3 v1.14.0
 	github.com/memwey/casbin-sqlx-adapter v0.2.0
 	github.com/mgutz/ansi v0.0.0-20200706080929-d51e80ef957d
+	github.com/pkg/errors v0.9.1
 	github.com/sirupsen/logrus v1.6.0
 	github.com/stretchr/testify v1.5.1
 	github.com/swaggo/gin-swagger v1.2.0
@@ -47,4 +51,5 @@ require (
 	golang.org/x/tools v0.0.0-20200710042808-f1c4188a97a1 // indirect
 	gopkg.in/yaml.v2 v2.3.0 // indirect
 	honnef.co/go/tools v0.0.1-2020.1.4
+	xorm.io/xorm v1.0.3
 )

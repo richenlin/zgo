@@ -64,7 +64,7 @@ func Upload(c UploadFun, form *multipart.Form) error {
 	for k := range form.File {
 		for _, fileObj := range form.File[k] {
 			suffix = path.Ext(fileObj.Filename)
-			filename = utils.Uuid(16) + suffix
+			filename = utils.UUID(16) + suffix
 
 			pathStr, err := c(fileObj, filename)
 
