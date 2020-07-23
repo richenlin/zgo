@@ -9,6 +9,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/wire"
 	"github.com/suisrc/zgo/app/api"
+	"github.com/suisrc/zgo/app/model/entc"
+	"github.com/suisrc/zgo/app/model/sqlxc"
+	"github.com/suisrc/zgo/app/ser"
 	"github.com/suisrc/zgo/middlewire"
 	"github.com/suisrc/zgo/modules/casbin"
 	"github.com/suisrc/zgo/modules/casbin/adapter/json"
@@ -27,12 +30,29 @@ func BuildInjector() (*Injector, func(), error) {
 		return nil, nil, err
 	}
 	router := middlewire.NewRouter(engine)
-	hello := &api.Hello{}
+	client, cleanup2, err := entc.NewClient()
+	if err != nil {
+		cleanup()
+		return nil, nil, err
+	}
+	db, cleanup3, err := sqlxc.NewClient()
+	if err != nil {
+		cleanup2()
+		cleanup()
+		return nil, nil, err
+	}
+	demo := &ser.Demo{
+		DBE: client,
+		DBS: db,
+	}
+	apiDemo := &api.Demo{
+		SerDemo: demo,
+	}
 	options := &api.Options{
 		Engine:   engine,
 		Enforcer: syncedEnforcer,
 		Router:   router,
-		Hello:    hello,
+		Demo:     apiDemo,
 	}
 	endpoints := api.InitEndpoints(options)
 	swagger := middlewire.NewSwagger(engine)
@@ -44,6 +64,8 @@ func BuildInjector() (*Injector, func(), error) {
 		Healthz:   healthz,
 	}
 	return injector, func() {
+		cleanup3()
+		cleanup2()
 		cleanup()
 	}, nil
 }

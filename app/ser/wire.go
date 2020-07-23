@@ -1,39 +1,25 @@
 package ser
 
 import (
-	"context"
-	"log"
-
 	"github.com/google/wire"
-	"github.com/suisrc/zgo/app/ent"
-
-	// 引入数据库
-	_ "github.com/mattn/go-sqlite3"
+	"github.com/suisrc/zgo/app/model/entc"
+	"github.com/suisrc/zgo/app/model/sqlxc"
 )
 
-// ServiceSet wire注入声明
+// ServiceSet wire注入服务
 var ServiceSet = wire.NewSet(
-	NewDBClient,
-
-	// 服务注册
-	wire.Struct(new(User), "*"),
+	// 数据库连接注册
+	entc.NewClient,
+	sqlxc.NewClient,
+	// 服务
+	wire.Struct(new(Demo), "*"),
 )
 
-// NewDBClient client
-func NewDBClient() (*ent.Client, func(), error) {
-	client, err := ent.Open("sqlite3", "file:ent?mode=memory&cache=shared&_fk=1")
-	if err != nil {
-		return nil, nil, err
-	}
+//======================================
+// 分割线
+//======================================
 
-	// run the auto migration tool.
-	if err := client.Schema.Create(context.Background()); err != nil {
-		log.Fatalf("failed creating schema resources: %v", err)
-	}
-
-	// defer client.Close()
-	clean := func() {
-		client.Close()
-	}
-	return client, clean, nil
+// ResultRef 返回值暂存器
+type ResultRef struct {
+	Data interface{}
 }

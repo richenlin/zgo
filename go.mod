@@ -19,10 +19,11 @@ require (
 	github.com/fatih/structs v1.1.0 // indirect
 	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-gonic/gin v1.6.3
-	github.com/go-openapi/spec v0.19.8 // indirect
+	github.com/go-openapi/spec v0.19.9 // indirect
 	github.com/go-openapi/swag v0.19.9 // indirect
 	github.com/go-redis/redis v6.15.8+incompatible
 	github.com/go-redis/redis_rate v6.5.0+incompatible
+	github.com/google/subcommands v1.2.0 // indirect
 	github.com/google/uuid v1.1.1
 	github.com/google/wire v0.4.0
 	github.com/guonaihong/gout v0.1.1
@@ -41,7 +42,7 @@ require (
 	github.com/urfave/cli/v2 v2.2.0
 	golang.org/x/net v0.0.0-20200707034311-ab3426394381 // indirect
 	golang.org/x/time v0.0.0-20200416051211-89c76fbcd5d1
-	golang.org/x/tools v0.0.0-20200710042808-f1c4188a97a1 // indirect
+	golang.org/x/tools v0.0.0-20200723000907-a7c6fd066f6d // indirect
 	gopkg.in/yaml.v2 v2.3.0 // indirect
 	xorm.io/xorm v1.0.3
 )

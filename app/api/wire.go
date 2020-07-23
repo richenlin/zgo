@@ -3,7 +3,6 @@ package api
 import (
 	"github.com/casbin/casbin/v2"
 	service "github.com/suisrc/zgo/app/ser"
-	"github.com/suisrc/zgo/middleware"
 	"github.com/suisrc/zgo/middlewire"
 	casbinjson "github.com/suisrc/zgo/modules/casbin/adapter/json"
 
@@ -19,7 +18,7 @@ var EndpointSet = wire.NewSet(
 	casbinjson.CasbinAdapterSet,    // Casbin依赖
 
 	// 接口注册
-	wire.Struct(new(Hello), "*"),
+	wire.Struct(new(Demo), "*"),
 )
 
 //=====================================
@@ -31,7 +30,7 @@ type Options struct {
 	Engine   *gin.Engine
 	Enforcer *casbin.SyncedEnforcer
 	Router   middlewire.Router
-	Hello    *Hello
+	Demo     *Demo
 }
 
 // Endpoints result
@@ -42,11 +41,10 @@ type Endpoints struct {
 func InitEndpoints(o *Options) *Endpoints {
 	r := o.Router
 
-	test := r.Group("test")
+	demo := r.Group("demo")
 	{
-		test.Use(middleware.CasbinMiddleware(o.Enforcer))
-		test.GET("hello", o.Hello.Hello)
-		test.GET("hello2", o.Hello.Hello)
+		//demo.Use(middleware.CasbinMiddleware(o.Enforcer))
+		o.Demo.Register(demo)
 	}
 
 	return &Endpoints{}

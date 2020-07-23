@@ -39,10 +39,11 @@ wire:
 	wire gen ./app/injector
 
 # go get github.com/facebookincubator/ent/cmd/entc
-# entc init User
+# cd ./app/model && entc init User
+# entc init --target ./app/model/ent/schema
 # generate the schema for User under <project>/ent/schema/
 entc:
-	go generate ./app/ent
+	go generate ./app/model/ent
 
 # go get -u github.com/mdempsky/gocode
 code:
