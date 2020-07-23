@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/facebookincubator/ent/dialect/sql"
+	"github.com/suisrc/zgo/app/model"
 	"github.com/suisrc/zgo/app/model/ent"
 
 	// 引入数据库
@@ -32,8 +33,13 @@ func NewClient() (*ent.Client, func(), error) {
 	//}
 
 	// run the auto migration tool.
-	if err := client.Schema.Create(context.Background()); err != nil {
-		log.Fatalf("failed creating schema resources: %v", err)
+	if model.TableSchemaInitEnt || model.TableSchemaInit {
+		if err := client.Schema.Create(context.Background()); err != nil {
+			log.Fatalf("failed creating schema resources: %v", err)
+		} else {
+			// 防止其他持久化框架更新table结构
+			model.TableSchemaInit = false
+		}
 	}
 
 	// defer client.Close()

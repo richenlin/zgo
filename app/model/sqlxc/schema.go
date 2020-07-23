@@ -1,5 +1,8 @@
 package sqlxc
 
+/*
+ 该内容只对mysql有效
+*/
 var schema = `
 CREATE TABLE demo (
 	id     int AUTO_INCREMENT PRIMARY KEY,

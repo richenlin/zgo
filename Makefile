@@ -12,7 +12,7 @@ run: start
 dev: debug
 
 mod:
-	go mod init ${APP}
+	go mod init github.com/suisrc/${APP}
 
 install:
 	go install ./cmd/app
