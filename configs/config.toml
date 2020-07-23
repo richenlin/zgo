@@ -7,12 +7,7 @@ Swagger = false
 # 启动时是否打印配置参数
 PrintConfig = true
 
-[HTTP]
-Host = "0.0.0.0"
-Port = 8081
-ShutdownTimeout = 30
-
 [Casbin]
 Enable = true
-#Model = "./configs/rbac_restful.conf"
+Model = "./configs/rbac_restful.conf"
 PolicySource = "./configs/rbac_policy.json"

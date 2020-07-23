@@ -23,20 +23,15 @@ require (
 	github.com/go-openapi/swag v0.19.9 // indirect
 	github.com/go-redis/redis v6.15.8+incompatible
 	github.com/go-redis/redis_rate v6.5.0+incompatible
-	github.com/google/gops v0.3.10
-	github.com/google/subcommands v1.2.0 // indirect
 	github.com/google/uuid v1.1.1
 	github.com/google/wire v0.4.0
 	github.com/guonaihong/gout v0.1.1
-	github.com/jawher/mow.cli v1.1.0
 	github.com/jmoiron/sqlx v1.2.0
 	github.com/json-iterator/go v1.1.9
 	github.com/koding/multiconfig v0.0.0-20171124222453-69c27309b2d7
 	github.com/mailru/easyjson v0.7.1 // indirect
-	github.com/mattn/go-colorable v0.1.7 // indirect
 	github.com/mattn/go-sqlite3 v1.14.0
 	github.com/memwey/casbin-sqlx-adapter v0.2.0
-	github.com/mgutz/ansi v0.0.0-20200706080929-d51e80ef957d
 	github.com/pkg/errors v0.9.1
 	github.com/sirupsen/logrus v1.6.0
 	github.com/stretchr/testify v1.5.1
@@ -44,12 +39,9 @@ require (
 	github.com/swaggo/swag v1.6.7
 	github.com/tidwall/buntdb v1.1.2
 	github.com/urfave/cli/v2 v2.2.0
-	go.mongodb.org/mongo-driver v1.3.3
 	golang.org/x/net v0.0.0-20200707034311-ab3426394381 // indirect
-	golang.org/x/text v0.3.3
 	golang.org/x/time v0.0.0-20200416051211-89c76fbcd5d1
 	golang.org/x/tools v0.0.0-20200710042808-f1c4188a97a1 // indirect
 	gopkg.in/yaml.v2 v2.3.0 // indirect
-	honnef.co/go/tools v0.0.1-2020.1.4
 	xorm.io/xorm v1.0.3
 )

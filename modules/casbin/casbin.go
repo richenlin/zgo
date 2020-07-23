@@ -17,14 +17,14 @@ func NewCasbinEnforcer(adapter persist.Adapter) (*casbin.SyncedEnforcer, func(),
 	c := config.C.Casbin
 	if c.Model == "" {
 		// return new(casbin.SyncedEnforcer), func() {}, nil
-		return nil, nil, errors.New("Casbin Model no config")
+		return nil, nil, errors.New("casbin model no config")
 	}
 
 	enforcer, err := casbin.NewSyncedEnforcer(c.Model)
 	if err != nil {
 		return nil, nil, err
 	}
-	logger.Infof(nil, "Loading Casbin Model[%s]", c.Model)
+	logger.Infof(nil, "loading casbin model[%s]", c.Model)
 	enforcer.EnableLog(c.Debug)
 
 	err = enforcer.InitWithModelAndAdapter(enforcer.GetModel(), adapter)
