@@ -1,4 +1,4 @@
-package ser
+package service
 
 import (
 	"context"
@@ -12,8 +12,7 @@ import (
 
 // Demo 用户
 type Demo struct {
-	DBE *ent.Client
-	DBS *sqlx.DB
+	GPA
 }
 
 // T1WithTx 更新用户信息

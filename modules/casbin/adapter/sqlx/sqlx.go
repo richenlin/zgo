@@ -23,7 +23,7 @@ func NewCasbinAdapter() (persist.Adapter, error) {
 	pSource := config.C.Casbin.PolicySource
 	pTable := config.C.Casbin.PolicyTable
 	if pType == "" || pSource == "" {
-		return nil, errors.New("Casbin.PlicyType OR Casbin.PolicySource has Empty")
+		return nil, errors.New("Casbin.PlicyType OR Casbin.PolicySource is empty")
 	}
 	if pTable == "" {
 		pTable = "casbin_rule"

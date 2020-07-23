@@ -2,7 +2,7 @@ package api
 
 import (
 	"github.com/casbin/casbin/v2"
-	service "github.com/suisrc/zgo/app/ser"
+	"github.com/suisrc/zgo/app/service"
 	"github.com/suisrc/zgo/middlewire"
 	casbinjson "github.com/suisrc/zgo/modules/casbin/adapter/json"
 

@@ -11,7 +11,7 @@ import (
 	"github.com/suisrc/zgo/app/api"
 	"github.com/suisrc/zgo/app/model/entc"
 	"github.com/suisrc/zgo/app/model/sqlxc"
-	"github.com/suisrc/zgo/app/ser"
+	"github.com/suisrc/zgo/app/service"
 	"github.com/suisrc/zgo/middlewire"
 	"github.com/suisrc/zgo/modules/casbin"
 	"github.com/suisrc/zgo/modules/casbin/adapter/json"
@@ -41,12 +41,15 @@ func BuildInjector() (*Injector, func(), error) {
 		cleanup()
 		return nil, nil, err
 	}
-	demo := &ser.Demo{
+	gpa := service.GPA{
 		DBE: client,
 		DBS: db,
 	}
+	demo := &service.Demo{
+		GPA: gpa,
+	}
 	apiDemo := &api.Demo{
-		SerDemo: demo,
+		DemoService: demo,
 	}
 	options := &api.Options{
 		Engine:   engine,

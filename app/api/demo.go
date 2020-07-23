@@ -4,12 +4,12 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/suisrc/zgo/app/ser"
+	"github.com/suisrc/zgo/app/service"
 )
 
 // Demo 接口
 type Demo struct {
-	SerDemo *ser.Demo
+	DemoService *service.Demo
 }
 
 // Register 注册路由
