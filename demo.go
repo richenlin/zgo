@@ -1,3 +1,5 @@
+// +build document
+
 package main
 
 /*
