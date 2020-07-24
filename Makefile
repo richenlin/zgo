@@ -11,11 +11,16 @@ run: start
 
 dev: debug
 
+# 初始化mod
 mod:
 	go mod init github.com/suisrc/${APP}
 
 install:
 	go install ./cmd/app
+
+# 修正依赖
+tidy:
+	go mod tidy
 
 build:
 	go build -ldflags "-w -s" -o $(SERVER_BIN) ./cmd/app
