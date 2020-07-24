@@ -1,5 +1,5 @@
 /*
-Package app 生成swagger文档
+Package demo 生成swagger文档
 
 文档规则请参考：https://github.com/swaggo/swag#declarative-comments-format
 
