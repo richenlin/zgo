@@ -37,3 +37,11 @@ func NewClient() (*sqlx.DB, func(), error) {
 	}
 	return db, clean, nil
 }
+
+// IsNotFound of sqlx
+func IsNotFound(err error) bool {
+	if err == nil {
+		return false
+	}
+	return "sql: no rows in result set" == err.Error()
+}

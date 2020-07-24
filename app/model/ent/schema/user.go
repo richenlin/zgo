@@ -1,8 +1,5 @@
 package schema
 
-/*
-  用户
-*/
 import "github.com/facebookincubator/ent"
 
 // User holds the schema definition for the User entity.

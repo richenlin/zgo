@@ -1,8 +1,5 @@
 package schema
 
-/*
-  资源
-*/
 import "github.com/facebookincubator/ent"
 
 // Resource holds the schema definition for the Resource entity.

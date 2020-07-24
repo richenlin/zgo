@@ -10,7 +10,6 @@ import (
 	"github.com/suisrc/zgo/app/model/ent/migrate"
 
 	"github.com/suisrc/zgo/app/model/ent/account"
-	"github.com/suisrc/zgo/app/model/ent/demo"
 	"github.com/suisrc/zgo/app/model/ent/menu"
 	"github.com/suisrc/zgo/app/model/ent/resource"
 	"github.com/suisrc/zgo/app/model/ent/role"
@@ -18,7 +17,6 @@ import (
 
 	"github.com/facebookincubator/ent/dialect"
 	"github.com/facebookincubator/ent/dialect/sql"
-	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 )
 
 // Client is the client that holds all ent builders.
@@ -28,8 +26,6 @@ type Client struct {
 	Schema *migrate.Schema
 	// Account is the client for interacting with the Account builders.
 	Account *AccountClient
-	// Demo is the client for interacting with the Demo builders.
-	Demo *DemoClient
 	// Menu is the client for interacting with the Menu builders.
 	Menu *MenuClient
 	// Resource is the client for interacting with the Resource builders.
@@ -52,7 +48,6 @@ func NewClient(opts ...Option) *Client {
 func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
 	c.Account = NewAccountClient(c.config)
-	c.Demo = NewDemoClient(c.config)
 	c.Menu = NewMenuClient(c.config)
 	c.Resource = NewResourceClient(c.config)
 	c.Role = NewRoleClient(c.config)
@@ -90,7 +85,6 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		ctx:      ctx,
 		config:   cfg,
 		Account:  NewAccountClient(cfg),
-		Demo:     NewDemoClient(cfg),
 		Menu:     NewMenuClient(cfg),
 		Resource: NewResourceClient(cfg),
 		Role:     NewRoleClient(cfg),
@@ -111,7 +105,6 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	return &Tx{
 		config:   cfg,
 		Account:  NewAccountClient(cfg),
-		Demo:     NewDemoClient(cfg),
 		Menu:     NewMenuClient(cfg),
 		Resource: NewResourceClient(cfg),
 		Role:     NewRoleClient(cfg),
@@ -145,7 +138,6 @@ func (c *Client) Close() error {
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
 	c.Account.Use(hooks...)
-	c.Demo.Use(hooks...)
 	c.Menu.Use(hooks...)
 	c.Resource.Use(hooks...)
 	c.Role.Use(hooks...)
@@ -233,121 +225,6 @@ func (c *AccountClient) GetX(ctx context.Context, id int) *Account {
 // Hooks returns the client hooks.
 func (c *AccountClient) Hooks() []Hook {
 	return c.hooks.Account
-}
-
-// DemoClient is a client for the Demo schema.
-type DemoClient struct {
-	config
-}
-
-// NewDemoClient returns a client for the Demo from the given config.
-func NewDemoClient(c config) *DemoClient {
-	return &DemoClient{config: c}
-}
-
-// Use adds a list of mutation hooks to the hooks stack.
-// A call to `Use(f, g, h)` equals to `demo.Hooks(f(g(h())))`.
-func (c *DemoClient) Use(hooks ...Hook) {
-	c.hooks.Demo = append(c.hooks.Demo, hooks...)
-}
-
-// Create returns a create builder for Demo.
-func (c *DemoClient) Create() *DemoCreate {
-	mutation := newDemoMutation(c.config, OpCreate)
-	return &DemoCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// Update returns an update builder for Demo.
-func (c *DemoClient) Update() *DemoUpdate {
-	mutation := newDemoMutation(c.config, OpUpdate)
-	return &DemoUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// UpdateOne returns an update builder for the given entity.
-func (c *DemoClient) UpdateOne(d *Demo) *DemoUpdateOne {
-	mutation := newDemoMutation(c.config, OpUpdateOne, withDemo(d))
-	return &DemoUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// UpdateOneID returns an update builder for the given id.
-func (c *DemoClient) UpdateOneID(id int) *DemoUpdateOne {
-	mutation := newDemoMutation(c.config, OpUpdateOne, withDemoID(id))
-	return &DemoUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// Delete returns a delete builder for Demo.
-func (c *DemoClient) Delete() *DemoDelete {
-	mutation := newDemoMutation(c.config, OpDelete)
-	return &DemoDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// DeleteOne returns a delete builder for the given entity.
-func (c *DemoClient) DeleteOne(d *Demo) *DemoDeleteOne {
-	return c.DeleteOneID(d.ID)
-}
-
-// DeleteOneID returns a delete builder for the given id.
-func (c *DemoClient) DeleteOneID(id int) *DemoDeleteOne {
-	builder := c.Delete().Where(demo.ID(id))
-	builder.mutation.id = &id
-	builder.mutation.op = OpDeleteOne
-	return &DemoDeleteOne{builder}
-}
-
-// Create returns a query builder for Demo.
-func (c *DemoClient) Query() *DemoQuery {
-	return &DemoQuery{config: c.config}
-}
-
-// Get returns a Demo entity by its id.
-func (c *DemoClient) Get(ctx context.Context, id int) (*Demo, error) {
-	return c.Query().Where(demo.ID(id)).Only(ctx)
-}
-
-// GetX is like Get, but panics if an error occurs.
-func (c *DemoClient) GetX(ctx context.Context, id int) *Demo {
-	d, err := c.Get(ctx, id)
-	if err != nil {
-		panic(err)
-	}
-	return d
-}
-
-// QueryParent queries the parent edge of a Demo.
-func (c *DemoClient) QueryParent(d *Demo) *DemoQuery {
-	query := &DemoQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
-		id := d.ID
-		step := sqlgraph.NewStep(
-			sqlgraph.From(demo.Table, demo.FieldID, id),
-			sqlgraph.To(demo.Table, demo.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, demo.ParentTable, demo.ParentColumn),
-		)
-		fromV = sqlgraph.Neighbors(d.driver.Dialect(), step)
-		return fromV, nil
-	}
-	return query
-}
-
-// QueryChildren queries the children edge of a Demo.
-func (c *DemoClient) QueryChildren(d *Demo) *DemoQuery {
-	query := &DemoQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
-		id := d.ID
-		step := sqlgraph.NewStep(
-			sqlgraph.From(demo.Table, demo.FieldID, id),
-			sqlgraph.To(demo.Table, demo.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, demo.ChildrenTable, demo.ChildrenColumn),
-		)
-		fromV = sqlgraph.Neighbors(d.driver.Dialect(), step)
-		return fromV, nil
-	}
-	return query
-}
-
-// Hooks returns the client hooks.
-func (c *DemoClient) Hooks() []Hook {
-	return c.hooks.Demo
 }
 
 // MenuClient is a client for the Menu schema.

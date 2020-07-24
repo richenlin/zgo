@@ -10,8 +10,8 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
-	"github.com/suisrc/zgo/app/model/ent/demo"
-	"github.com/suisrc/zgo/app/model/ent/predicate"
+	"github.com/suisrc/zgo/demo/model/ent/demo"
+	"github.com/suisrc/zgo/demo/model/ent/predicate"
 )
 
 // DemoUpdate is the builder for updating Demo entities.
@@ -40,9 +40,9 @@ func (du *DemoUpdate) SetName(s string) *DemoUpdate {
 	return du
 }
 
-// SetDemo sets the demo field.
-func (du *DemoUpdate) SetDemo(s string) *DemoUpdate {
-	du.mutation.SetDemo(s)
+// SetMemo sets the memo field.
+func (du *DemoUpdate) SetMemo(s string) *DemoUpdate {
+	du.mutation.SetMemo(s)
 	return du
 }
 
@@ -50,6 +50,14 @@ func (du *DemoUpdate) SetDemo(s string) *DemoUpdate {
 func (du *DemoUpdate) SetStatus(i int) *DemoUpdate {
 	du.mutation.ResetStatus()
 	du.mutation.SetStatus(i)
+	return du
+}
+
+// SetNillableStatus sets the status field if the given value is not nil.
+func (du *DemoUpdate) SetNillableStatus(i *int) *DemoUpdate {
+	if i != nil {
+		du.SetStatus(*i)
+	}
 	return du
 }
 
@@ -65,9 +73,25 @@ func (du *DemoUpdate) SetCreator(s string) *DemoUpdate {
 	return du
 }
 
+// SetNillableCreator sets the creator field if the given value is not nil.
+func (du *DemoUpdate) SetNillableCreator(s *string) *DemoUpdate {
+	if s != nil {
+		du.SetCreator(*s)
+	}
+	return du
+}
+
 // SetUpdator sets the updator field.
 func (du *DemoUpdate) SetUpdator(s string) *DemoUpdate {
 	du.mutation.SetUpdator(s)
+	return du
+}
+
+// SetNillableUpdator sets the updator field if the given value is not nil.
+func (du *DemoUpdate) SetNillableUpdator(s *string) *DemoUpdate {
+	if s != nil {
+		du.SetUpdator(*s)
+	}
 	return du
 }
 
@@ -77,9 +101,25 @@ func (du *DemoUpdate) SetCreatedAt(t time.Time) *DemoUpdate {
 	return du
 }
 
-// SetUpadtedAt sets the upadted_at field.
-func (du *DemoUpdate) SetUpadtedAt(t time.Time) *DemoUpdate {
-	du.mutation.SetUpadtedAt(t)
+// SetNillableCreatedAt sets the created_at field if the given value is not nil.
+func (du *DemoUpdate) SetNillableCreatedAt(t *time.Time) *DemoUpdate {
+	if t != nil {
+		du.SetCreatedAt(*t)
+	}
+	return du
+}
+
+// SetUpdatedAt sets the updated_at field.
+func (du *DemoUpdate) SetUpdatedAt(t time.Time) *DemoUpdate {
+	du.mutation.SetUpdatedAt(t)
+	return du
+}
+
+// SetNillableUpdatedAt sets the updated_at field if the given value is not nil.
+func (du *DemoUpdate) SetNillableUpdatedAt(t *time.Time) *DemoUpdate {
+	if t != nil {
+		du.SetUpdatedAt(*t)
+	}
 	return du
 }
 
@@ -232,11 +272,11 @@ func (du *DemoUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: demo.FieldName,
 		})
 	}
-	if value, ok := du.mutation.Demo(); ok {
+	if value, ok := du.mutation.Memo(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: demo.FieldDemo,
+			Column: demo.FieldMemo,
 		})
 	}
 	if value, ok := du.mutation.Status(); ok {
@@ -274,11 +314,11 @@ func (du *DemoUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: demo.FieldCreatedAt,
 		})
 	}
-	if value, ok := du.mutation.UpadtedAt(); ok {
+	if value, ok := du.mutation.UpdatedAt(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeTime,
 			Value:  value,
-			Column: demo.FieldUpadtedAt,
+			Column: demo.FieldUpdatedAt,
 		})
 	}
 	if du.mutation.ParentCleared() {
@@ -384,9 +424,9 @@ func (duo *DemoUpdateOne) SetName(s string) *DemoUpdateOne {
 	return duo
 }
 
-// SetDemo sets the demo field.
-func (duo *DemoUpdateOne) SetDemo(s string) *DemoUpdateOne {
-	duo.mutation.SetDemo(s)
+// SetMemo sets the memo field.
+func (duo *DemoUpdateOne) SetMemo(s string) *DemoUpdateOne {
+	duo.mutation.SetMemo(s)
 	return duo
 }
 
@@ -394,6 +434,14 @@ func (duo *DemoUpdateOne) SetDemo(s string) *DemoUpdateOne {
 func (duo *DemoUpdateOne) SetStatus(i int) *DemoUpdateOne {
 	duo.mutation.ResetStatus()
 	duo.mutation.SetStatus(i)
+	return duo
+}
+
+// SetNillableStatus sets the status field if the given value is not nil.
+func (duo *DemoUpdateOne) SetNillableStatus(i *int) *DemoUpdateOne {
+	if i != nil {
+		duo.SetStatus(*i)
+	}
 	return duo
 }
 
@@ -409,9 +457,25 @@ func (duo *DemoUpdateOne) SetCreator(s string) *DemoUpdateOne {
 	return duo
 }
 
+// SetNillableCreator sets the creator field if the given value is not nil.
+func (duo *DemoUpdateOne) SetNillableCreator(s *string) *DemoUpdateOne {
+	if s != nil {
+		duo.SetCreator(*s)
+	}
+	return duo
+}
+
 // SetUpdator sets the updator field.
 func (duo *DemoUpdateOne) SetUpdator(s string) *DemoUpdateOne {
 	duo.mutation.SetUpdator(s)
+	return duo
+}
+
+// SetNillableUpdator sets the updator field if the given value is not nil.
+func (duo *DemoUpdateOne) SetNillableUpdator(s *string) *DemoUpdateOne {
+	if s != nil {
+		duo.SetUpdator(*s)
+	}
 	return duo
 }
 
@@ -421,9 +485,25 @@ func (duo *DemoUpdateOne) SetCreatedAt(t time.Time) *DemoUpdateOne {
 	return duo
 }
 
-// SetUpadtedAt sets the upadted_at field.
-func (duo *DemoUpdateOne) SetUpadtedAt(t time.Time) *DemoUpdateOne {
-	duo.mutation.SetUpadtedAt(t)
+// SetNillableCreatedAt sets the created_at field if the given value is not nil.
+func (duo *DemoUpdateOne) SetNillableCreatedAt(t *time.Time) *DemoUpdateOne {
+	if t != nil {
+		duo.SetCreatedAt(*t)
+	}
+	return duo
+}
+
+// SetUpdatedAt sets the updated_at field.
+func (duo *DemoUpdateOne) SetUpdatedAt(t time.Time) *DemoUpdateOne {
+	duo.mutation.SetUpdatedAt(t)
+	return duo
+}
+
+// SetNillableUpdatedAt sets the updated_at field if the given value is not nil.
+func (duo *DemoUpdateOne) SetNillableUpdatedAt(t *time.Time) *DemoUpdateOne {
+	if t != nil {
+		duo.SetUpdatedAt(*t)
+	}
 	return duo
 }
 
@@ -574,11 +654,11 @@ func (duo *DemoUpdateOne) sqlSave(ctx context.Context) (d *Demo, err error) {
 			Column: demo.FieldName,
 		})
 	}
-	if value, ok := duo.mutation.Demo(); ok {
+	if value, ok := duo.mutation.Memo(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: demo.FieldDemo,
+			Column: demo.FieldMemo,
 		})
 	}
 	if value, ok := duo.mutation.Status(); ok {
@@ -616,11 +696,11 @@ func (duo *DemoUpdateOne) sqlSave(ctx context.Context) (d *Demo, err error) {
 			Column: demo.FieldCreatedAt,
 		})
 	}
-	if value, ok := duo.mutation.UpadtedAt(); ok {
+	if value, ok := duo.mutation.UpdatedAt(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeTime,
 			Value:  value,
-			Column: demo.FieldUpadtedAt,
+			Column: demo.FieldUpdatedAt,
 		})
 	}
 	if duo.mutation.ParentCleared() {

@@ -16,7 +16,65 @@
     },
     "basePath": "/api",
     "paths": {
-        "/test/hello": {
+        "/demo/get": {
+            "get": {
+                "description": "Get",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Demo id",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/helper.ErrorInfo"
+                        }
+                    }
+                }
+            }
+        },
+        "/demo/get1": {
+            "get": {
+                "description": "Get",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Demo id",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/helper.ErrorInfo"
+                        }
+                    }
+                }
+            }
+        },
+        "/demo/hello": {
             "get": {
                 "description": "Hello world",
                 "consumes": [
@@ -33,6 +91,88 @@
                             "type": "string"
                         }
                     }
+                }
+            }
+        },
+        "/demo/set": {
+            "post": {
+                "description": "Set",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Set",
+                "parameters": [
+                    {
+                        "description": "Demo Info",
+                        "name": "item",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/schema.DemoSet"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/helper.ErrorInfo"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "helper.ErrorInfo": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "description": "响应数据",
+                    "type": "object"
+                },
+                "errorCode": {
+                    "description": "错误代码",
+                    "type": "string"
+                },
+                "errorMessage": {
+                    "description": "向用户显示消息",
+                    "type": "string"
+                },
+                "showType": {
+                    "description": "错误显示类型：0静音； 1条消息警告； 2消息错误； 4通知； 9页",
+                    "type": "integer"
+                },
+                "success": {
+                    "description": "请求成功, false",
+                    "type": "boolean"
+                },
+                "traceId": {
+                    "description": "方便进行后端故障排除：唯一的请求ID",
+                    "type": "string"
+                }
+            }
+        },
+        "schema.DemoSet": {
+            "type": "object",
+            "required": [
+                "code",
+                "name"
+            ],
+            "properties": {
+                "code": {
+                    "description": "编号",
+                    "type": "string"
+                },
+                "memo": {
+                    "description": "备注",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "名称",
+                    "type": "string"
                 }
             }
         }

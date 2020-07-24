@@ -67,3 +67,13 @@ pack: build
 
 cli:
 	go run cmd/cli.go init
+
+# demo
+demo-run:
+	go run cmd/demo/main.go demo -c ./configs/config.toml
+demo-swagger:
+	swag init --generalInfo ./demo/swagger.go --output ./demo/swagger
+demo-wire:
+	wire gen ./demo/injector
+demo-entc:
+	go generate ./demo/model/ent

@@ -2,7 +2,7 @@
 runmode = "debug"
 
 # 是否启用swagger
-swagger = false
+swagger = true
 
 # 启动时是否打印配置参数
 printconfig = false

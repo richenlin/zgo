@@ -1,6 +1,9 @@
 package helper
 
-import jsoniter "github.com/json-iterator/go"
+import (
+	//"encoding/json"
+	jsoniter "github.com/json-iterator/go"
+)
 
 // 定义JSON操作
 var (
@@ -10,7 +13,12 @@ var (
 	JSONMarshalIndent = json.MarshalIndent
 	JSONNewDecoder    = json.NewDecoder
 	JSONNewEncoder    = json.NewEncoder
-	ResponseTypeJSON  = "application/json; charset=utf-8"
+)
+
+// 定义Type
+var (
+	// Response of request
+	ResponseTypeJSON = "application/json; charset=utf-8"
 )
 
 // JSONMarshalToString JSON编码为字符串

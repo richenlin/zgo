@@ -18,7 +18,6 @@ var EndpointSet = wire.NewSet(
 	casbinjson.CasbinAdapterSet,    // Casbin依赖
 
 	// 接口注册
-	wire.Struct(new(Demo), "*"),
 )
 
 //=====================================
@@ -30,7 +29,6 @@ type Options struct {
 	Engine   *gin.Engine
 	Enforcer *casbin.SyncedEnforcer
 	Router   middlewire.Router
-	Demo     *Demo
 }
 
 // Endpoints result
@@ -39,13 +37,7 @@ type Endpoints struct {
 
 // InitEndpoints init
 func InitEndpoints(o *Options) *Endpoints {
-	r := o.Router
-
-	demo := r.Group("demo")
-	{
-		//demo.Use(middleware.CasbinMiddleware(o.Enforcer))
-		o.Demo.Register(demo)
-	}
+	//r := o.Router
 
 	return &Endpoints{}
 }

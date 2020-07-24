@@ -43,8 +43,8 @@ func NewError(ctx *gin.Context, showType int, code string, msg string, args ...i
 }
 
 // NewOK 包装响应结果
-func NewOK(ctx *gin.Context, data interface{}) *Result {
-	res := &Result{
+func NewOK(ctx *gin.Context, data interface{}) *Success {
+	res := &Success{
 		Success: true,
 		Data:    data,
 		TraceID: GetTraceID(ctx),

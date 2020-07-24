@@ -1,8 +1,5 @@
 package schema
 
-/*
-  账户
-*/
 import "github.com/facebookincubator/ent"
 
 // Account holds the schema definition for the Account entity.

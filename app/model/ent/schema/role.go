@@ -1,8 +1,5 @@
 package schema
 
-/*
-  角色
-*/
 import "github.com/facebookincubator/ent"
 
 // Role holds the schema definition for the Role entity.

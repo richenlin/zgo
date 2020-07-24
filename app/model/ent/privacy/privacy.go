@@ -234,30 +234,6 @@ func (f AccountMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutatio
 	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.AccountMutation", m)
 }
 
-// The DemoQueryRuleFunc type is an adapter to allow the use of ordinary
-// functions as a query rule.
-type DemoQueryRuleFunc func(context.Context, *ent.DemoQuery) error
-
-// EvalQuery return f(ctx, q).
-func (f DemoQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
-	if q, ok := q.(*ent.DemoQuery); ok {
-		return f(ctx, q)
-	}
-	return Denyf("ent/privacy: unexpected query type %T, expect *ent.DemoQuery", q)
-}
-
-// The DemoMutationRuleFunc type is an adapter to allow the use of ordinary
-// functions as a mutation rule.
-type DemoMutationRuleFunc func(context.Context, *ent.DemoMutation) error
-
-// EvalMutation calls f(ctx, m).
-func (f DemoMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
-	if m, ok := m.(*ent.DemoMutation); ok {
-		return f(ctx, m)
-	}
-	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.DemoMutation", m)
-}
-
 // The MenuQueryRuleFunc type is an adapter to allow the use of ordinary
 // functions as a query rule.
 type MenuQueryRuleFunc func(context.Context, *ent.MenuQuery) error

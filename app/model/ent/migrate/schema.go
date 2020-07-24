@@ -19,34 +19,6 @@ var (
 		PrimaryKey:  []*schema.Column{AccountsColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{},
 	}
-	// DemosColumns holds the columns for the "demos" table.
-	DemosColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "code", Type: field.TypeString, Unique: true},
-		{Name: "name", Type: field.TypeString, Unique: true},
-		{Name: "demo", Type: field.TypeString},
-		{Name: "status", Type: field.TypeInt},
-		{Name: "creator", Type: field.TypeString},
-		{Name: "updator", Type: field.TypeString},
-		{Name: "created_at", Type: field.TypeTime},
-		{Name: "upadted_at", Type: field.TypeTime},
-		{Name: "demo_children", Type: field.TypeInt, Nullable: true},
-	}
-	// DemosTable holds the schema information for the "demos" table.
-	DemosTable = &schema.Table{
-		Name:       "demos",
-		Columns:    DemosColumns,
-		PrimaryKey: []*schema.Column{DemosColumns[0]},
-		ForeignKeys: []*schema.ForeignKey{
-			{
-				Symbol:  "demos_demos_children",
-				Columns: []*schema.Column{DemosColumns[9]},
-
-				RefColumns: []*schema.Column{DemosColumns[0]},
-				OnDelete:   schema.SetNull,
-			},
-		},
-	}
 	// MenusColumns holds the columns for the "menus" table.
 	MenusColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
@@ -94,7 +66,6 @@ var (
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		AccountsTable,
-		DemosTable,
 		MenusTable,
 		ResourcesTable,
 		RolesTable,
@@ -103,5 +74,4 @@ var (
 )
 
 func init() {
-	DemosTable.ForeignKeys[0].RefTable = DemosTable
 }

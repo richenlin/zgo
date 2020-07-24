@@ -22,19 +22,6 @@ func (f AccountFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, err
 	return f(ctx, mv)
 }
 
-// The DemoFunc type is an adapter to allow the use of ordinary
-// function as Demo mutator.
-type DemoFunc func(context.Context, *ent.DemoMutation) (ent.Value, error)
-
-// Mutate calls f(ctx, m).
-func (f DemoFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	mv, ok := m.(*ent.DemoMutation)
-	if !ok {
-		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.DemoMutation", m)
-	}
-	return f(ctx, mv)
-}
-
 // The MenuFunc type is an adapter to allow the use of ordinary
 // function as Menu mutator.
 type MenuFunc func(context.Context, *ent.MenuMutation) (ent.Value, error)

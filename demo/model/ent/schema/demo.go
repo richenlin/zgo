@@ -6,6 +6,8 @@ package schema
   在基于 SQL 的数据库中，其类型默认为数据库中自动递增
 */
 import (
+	"time"
+
 	"github.com/facebookincubator/ent"
 	"github.com/facebookincubator/ent/schema/edge"
 	"github.com/facebookincubator/ent/schema/field"
@@ -16,17 +18,29 @@ type Demo struct {
 	ent.Schema
 }
 
+// Config of the Demo.
+func (Demo) Config() ent.Config {
+	return ent.Config{
+		Table: "demo",
+	}
+}
+
+// Hooks of the Card.
+func (Demo) Hooks() []ent.Hook {
+	return nil
+}
+
 // Fields of the Demo.
 func (Demo) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("code").Unique(),
 		field.String("name").Unique(),
-		field.String("demo"),
-		field.Int("status").Min(1).Max(2),
-		field.String("creator"),
-		field.String("updator"),
-		field.Time("created_at"),
-		field.Time("upadted_at"),
+		field.String("memo"),
+		field.Int("status").Min(1).Max(2).Default(1),
+		field.String("creator").Default(""),
+		field.String("updator").Default(""),
+		field.Time("created_at").Default(time.Now),
+		field.Time("updated_at").Default(time.Now),
 	}
 }
 

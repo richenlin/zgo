@@ -12,8 +12,8 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
-	"github.com/suisrc/zgo/app/model/ent/demo"
-	"github.com/suisrc/zgo/app/model/ent/predicate"
+	"github.com/suisrc/zgo/demo/model/ent/demo"
+	"github.com/suisrc/zgo/demo/model/ent/predicate"
 )
 
 // DemoQuery is the builder for querying Demo entities.

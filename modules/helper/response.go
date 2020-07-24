@@ -8,6 +8,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// ResSuccess 包装响应错误
+func ResSuccess(ctx *gin.Context, v interface{}) error {
+	res := NewOK(ctx, v)
+	//ctx.JSON(http.StatusOK, res)
+	//ctx.Abort()
+	ResJSON(ctx, http.StatusOK, res)
+	return res
+}
+
 // ResError 包装响应错误
 func ResError(ctx *gin.Context, em *ErrorModel) error {
 	res := ErrorInfo{

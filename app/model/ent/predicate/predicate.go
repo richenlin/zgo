@@ -9,9 +9,6 @@ import (
 // Account is the predicate function for account builders.
 type Account func(*sql.Selector)
 
-// Demo is the predicate function for demo builders.
-type Demo func(*sql.Selector)
-
 // Menu is the predicate function for menu builders.
 type Menu func(*sql.Selector)
 

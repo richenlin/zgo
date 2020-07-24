@@ -7,7 +7,7 @@ import (
 
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
-	"github.com/suisrc/zgo/app/model/ent/predicate"
+	"github.com/suisrc/zgo/demo/model/ent/predicate"
 )
 
 // ID filters vertices based on their identifier.
@@ -107,10 +107,10 @@ func Name(v string) predicate.Demo {
 	})
 }
 
-// Demo applies equality check predicate on the "demo" field. It's identical to DemoEQ.
-func Demo(v string) predicate.Demo {
+// Memo applies equality check predicate on the "memo" field. It's identical to MemoEQ.
+func Memo(v string) predicate.Demo {
 	return predicate.Demo(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldDemo), v))
+		s.Where(sql.EQ(s.C(FieldMemo), v))
 	})
 }
 
@@ -142,10 +142,10 @@ func CreatedAt(v time.Time) predicate.Demo {
 	})
 }
 
-// UpadtedAt applies equality check predicate on the "upadted_at" field. It's identical to UpadtedAtEQ.
-func UpadtedAt(v time.Time) predicate.Demo {
+// UpdatedAt applies equality check predicate on the "updated_at" field. It's identical to UpdatedAtEQ.
+func UpdatedAt(v time.Time) predicate.Demo {
 	return predicate.Demo(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldUpadtedAt), v))
+		s.Where(sql.EQ(s.C(FieldUpdatedAt), v))
 	})
 }
 
@@ -371,22 +371,22 @@ func NameContainsFold(v string) predicate.Demo {
 	})
 }
 
-// DemoEQ applies the EQ predicate on the "demo" field.
-func DemoEQ(v string) predicate.Demo {
+// MemoEQ applies the EQ predicate on the "memo" field.
+func MemoEQ(v string) predicate.Demo {
 	return predicate.Demo(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldDemo), v))
+		s.Where(sql.EQ(s.C(FieldMemo), v))
 	})
 }
 
-// DemoNEQ applies the NEQ predicate on the "demo" field.
-func DemoNEQ(v string) predicate.Demo {
+// MemoNEQ applies the NEQ predicate on the "memo" field.
+func MemoNEQ(v string) predicate.Demo {
 	return predicate.Demo(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldDemo), v))
+		s.Where(sql.NEQ(s.C(FieldMemo), v))
 	})
 }
 
-// DemoIn applies the In predicate on the "demo" field.
-func DemoIn(vs ...string) predicate.Demo {
+// MemoIn applies the In predicate on the "memo" field.
+func MemoIn(vs ...string) predicate.Demo {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -398,12 +398,12 @@ func DemoIn(vs ...string) predicate.Demo {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.In(s.C(FieldDemo), v...))
+		s.Where(sql.In(s.C(FieldMemo), v...))
 	})
 }
 
-// DemoNotIn applies the NotIn predicate on the "demo" field.
-func DemoNotIn(vs ...string) predicate.Demo {
+// MemoNotIn applies the NotIn predicate on the "memo" field.
+func MemoNotIn(vs ...string) predicate.Demo {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -415,70 +415,70 @@ func DemoNotIn(vs ...string) predicate.Demo {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.NotIn(s.C(FieldDemo), v...))
+		s.Where(sql.NotIn(s.C(FieldMemo), v...))
 	})
 }
 
-// DemoGT applies the GT predicate on the "demo" field.
-func DemoGT(v string) predicate.Demo {
+// MemoGT applies the GT predicate on the "memo" field.
+func MemoGT(v string) predicate.Demo {
 	return predicate.Demo(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldDemo), v))
+		s.Where(sql.GT(s.C(FieldMemo), v))
 	})
 }
 
-// DemoGTE applies the GTE predicate on the "demo" field.
-func DemoGTE(v string) predicate.Demo {
+// MemoGTE applies the GTE predicate on the "memo" field.
+func MemoGTE(v string) predicate.Demo {
 	return predicate.Demo(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldDemo), v))
+		s.Where(sql.GTE(s.C(FieldMemo), v))
 	})
 }
 
-// DemoLT applies the LT predicate on the "demo" field.
-func DemoLT(v string) predicate.Demo {
+// MemoLT applies the LT predicate on the "memo" field.
+func MemoLT(v string) predicate.Demo {
 	return predicate.Demo(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldDemo), v))
+		s.Where(sql.LT(s.C(FieldMemo), v))
 	})
 }
 
-// DemoLTE applies the LTE predicate on the "demo" field.
-func DemoLTE(v string) predicate.Demo {
+// MemoLTE applies the LTE predicate on the "memo" field.
+func MemoLTE(v string) predicate.Demo {
 	return predicate.Demo(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldDemo), v))
+		s.Where(sql.LTE(s.C(FieldMemo), v))
 	})
 }
 
-// DemoContains applies the Contains predicate on the "demo" field.
-func DemoContains(v string) predicate.Demo {
+// MemoContains applies the Contains predicate on the "memo" field.
+func MemoContains(v string) predicate.Demo {
 	return predicate.Demo(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldDemo), v))
+		s.Where(sql.Contains(s.C(FieldMemo), v))
 	})
 }
 
-// DemoHasPrefix applies the HasPrefix predicate on the "demo" field.
-func DemoHasPrefix(v string) predicate.Demo {
+// MemoHasPrefix applies the HasPrefix predicate on the "memo" field.
+func MemoHasPrefix(v string) predicate.Demo {
 	return predicate.Demo(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldDemo), v))
+		s.Where(sql.HasPrefix(s.C(FieldMemo), v))
 	})
 }
 
-// DemoHasSuffix applies the HasSuffix predicate on the "demo" field.
-func DemoHasSuffix(v string) predicate.Demo {
+// MemoHasSuffix applies the HasSuffix predicate on the "memo" field.
+func MemoHasSuffix(v string) predicate.Demo {
 	return predicate.Demo(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldDemo), v))
+		s.Where(sql.HasSuffix(s.C(FieldMemo), v))
 	})
 }
 
-// DemoEqualFold applies the EqualFold predicate on the "demo" field.
-func DemoEqualFold(v string) predicate.Demo {
+// MemoEqualFold applies the EqualFold predicate on the "memo" field.
+func MemoEqualFold(v string) predicate.Demo {
 	return predicate.Demo(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldDemo), v))
+		s.Where(sql.EqualFold(s.C(FieldMemo), v))
 	})
 }
 
-// DemoContainsFold applies the ContainsFold predicate on the "demo" field.
-func DemoContainsFold(v string) predicate.Demo {
+// MemoContainsFold applies the ContainsFold predicate on the "memo" field.
+func MemoContainsFold(v string) predicate.Demo {
 	return predicate.Demo(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldDemo), v))
+		s.Where(sql.ContainsFold(s.C(FieldMemo), v))
 	})
 }
 
@@ -856,22 +856,22 @@ func CreatedAtLTE(v time.Time) predicate.Demo {
 	})
 }
 
-// UpadtedAtEQ applies the EQ predicate on the "upadted_at" field.
-func UpadtedAtEQ(v time.Time) predicate.Demo {
+// UpdatedAtEQ applies the EQ predicate on the "updated_at" field.
+func UpdatedAtEQ(v time.Time) predicate.Demo {
 	return predicate.Demo(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldUpadtedAt), v))
+		s.Where(sql.EQ(s.C(FieldUpdatedAt), v))
 	})
 }
 
-// UpadtedAtNEQ applies the NEQ predicate on the "upadted_at" field.
-func UpadtedAtNEQ(v time.Time) predicate.Demo {
+// UpdatedAtNEQ applies the NEQ predicate on the "updated_at" field.
+func UpdatedAtNEQ(v time.Time) predicate.Demo {
 	return predicate.Demo(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldUpadtedAt), v))
+		s.Where(sql.NEQ(s.C(FieldUpdatedAt), v))
 	})
 }
 
-// UpadtedAtIn applies the In predicate on the "upadted_at" field.
-func UpadtedAtIn(vs ...time.Time) predicate.Demo {
+// UpdatedAtIn applies the In predicate on the "updated_at" field.
+func UpdatedAtIn(vs ...time.Time) predicate.Demo {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -883,12 +883,12 @@ func UpadtedAtIn(vs ...time.Time) predicate.Demo {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.In(s.C(FieldUpadtedAt), v...))
+		s.Where(sql.In(s.C(FieldUpdatedAt), v...))
 	})
 }
 
-// UpadtedAtNotIn applies the NotIn predicate on the "upadted_at" field.
-func UpadtedAtNotIn(vs ...time.Time) predicate.Demo {
+// UpdatedAtNotIn applies the NotIn predicate on the "updated_at" field.
+func UpdatedAtNotIn(vs ...time.Time) predicate.Demo {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -900,35 +900,35 @@ func UpadtedAtNotIn(vs ...time.Time) predicate.Demo {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.NotIn(s.C(FieldUpadtedAt), v...))
+		s.Where(sql.NotIn(s.C(FieldUpdatedAt), v...))
 	})
 }
 
-// UpadtedAtGT applies the GT predicate on the "upadted_at" field.
-func UpadtedAtGT(v time.Time) predicate.Demo {
+// UpdatedAtGT applies the GT predicate on the "updated_at" field.
+func UpdatedAtGT(v time.Time) predicate.Demo {
 	return predicate.Demo(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldUpadtedAt), v))
+		s.Where(sql.GT(s.C(FieldUpdatedAt), v))
 	})
 }
 
-// UpadtedAtGTE applies the GTE predicate on the "upadted_at" field.
-func UpadtedAtGTE(v time.Time) predicate.Demo {
+// UpdatedAtGTE applies the GTE predicate on the "updated_at" field.
+func UpdatedAtGTE(v time.Time) predicate.Demo {
 	return predicate.Demo(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldUpadtedAt), v))
+		s.Where(sql.GTE(s.C(FieldUpdatedAt), v))
 	})
 }
 
-// UpadtedAtLT applies the LT predicate on the "upadted_at" field.
-func UpadtedAtLT(v time.Time) predicate.Demo {
+// UpdatedAtLT applies the LT predicate on the "updated_at" field.
+func UpdatedAtLT(v time.Time) predicate.Demo {
 	return predicate.Demo(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldUpadtedAt), v))
+		s.Where(sql.LT(s.C(FieldUpdatedAt), v))
 	})
 }
 
-// UpadtedAtLTE applies the LTE predicate on the "upadted_at" field.
-func UpadtedAtLTE(v time.Time) predicate.Demo {
+// UpdatedAtLTE applies the LTE predicate on the "updated_at" field.
+func UpdatedAtLTE(v time.Time) predicate.Demo {
 	return predicate.Demo(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldUpadtedAt), v))
+		s.Where(sql.LTE(s.C(FieldUpdatedAt), v))
 	})
 }
 

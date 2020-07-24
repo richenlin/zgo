@@ -2,6 +2,10 @@
 
 package demo
 
+import (
+	"time"
+)
+
 const (
 	// Label holds the string label denoting the demo type in the database.
 	Label = "demo"
@@ -11,8 +15,8 @@ const (
 	FieldCode = "code"
 	// FieldName holds the string denoting the name field in the database.
 	FieldName = "name"
-	// FieldDemo holds the string denoting the demo field in the database.
-	FieldDemo = "demo"
+	// FieldMemo holds the string denoting the memo field in the database.
+	FieldMemo = "memo"
 	// FieldStatus holds the string denoting the status field in the database.
 	FieldStatus = "status"
 	// FieldCreator holds the string denoting the creator field in the database.
@@ -21,8 +25,8 @@ const (
 	FieldUpdator = "updator"
 	// FieldCreatedAt holds the string denoting the created_at field in the database.
 	FieldCreatedAt = "created_at"
-	// FieldUpadtedAt holds the string denoting the upadted_at field in the database.
-	FieldUpadtedAt = "upadted_at"
+	// FieldUpdatedAt holds the string denoting the updated_at field in the database.
+	FieldUpdatedAt = "updated_at"
 
 	// EdgeParent holds the string denoting the parent edge name in mutations.
 	EdgeParent = "parent"
@@ -30,13 +34,13 @@ const (
 	EdgeChildren = "children"
 
 	// Table holds the table name of the demo in the database.
-	Table = "demos"
+	Table = "demo"
 	// ParentTable is the table the holds the parent relation/edge.
-	ParentTable = "demos"
+	ParentTable = "demo"
 	// ParentColumn is the table column denoting the parent relation/edge.
 	ParentColumn = "demo_children"
 	// ChildrenTable is the table the holds the children relation/edge.
-	ChildrenTable = "demos"
+	ChildrenTable = "demo"
 	// ChildrenColumn is the table column denoting the children relation/edge.
 	ChildrenColumn = "demo_children"
 )
@@ -46,12 +50,12 @@ var Columns = []string{
 	FieldID,
 	FieldCode,
 	FieldName,
-	FieldDemo,
+	FieldMemo,
 	FieldStatus,
 	FieldCreator,
 	FieldUpdator,
 	FieldCreatedAt,
-	FieldUpadtedAt,
+	FieldUpdatedAt,
 }
 
 // ForeignKeys holds the SQL foreign-keys that are owned by the Demo type.
@@ -60,6 +64,16 @@ var ForeignKeys = []string{
 }
 
 var (
+	// DefaultStatus holds the default value on creation for the status field.
+	DefaultStatus int
 	// StatusValidator is a validator for the "status" field. It is called by the builders before save.
 	StatusValidator func(int) error
+	// DefaultCreator holds the default value on creation for the creator field.
+	DefaultCreator string
+	// DefaultUpdator holds the default value on creation for the updator field.
+	DefaultUpdator string
+	// DefaultCreatedAt holds the default value on creation for the created_at field.
+	DefaultCreatedAt func() time.Time
+	// DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	DefaultUpdatedAt func() time.Time
 )

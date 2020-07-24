@@ -13,14 +13,14 @@ const (
 	ShowPage = 9
 )
 
-// Result 正常请求结构体
-type Result struct {
-	Success bool        // 请求成功, true
-	Data    interface{} // 响应数据
-	TraceID string      // 方便进行后端故障排除：唯一的请求ID
+// Success 正常请求结构体
+type Success struct {
+	Success bool        `json:"success"`        // 请求成功, false
+	Data    interface{} `json:"data,omitempty"` // 响应数据
+	TraceID string      `json:"traceId"`        // 方便进行后端故障排除：唯一的请求ID
 }
 
-func (e *Result) Error() string {
+func (e *Success) Error() string {
 	return "success"
 }
 

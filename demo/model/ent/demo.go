@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/facebookincubator/ent/dialect/sql"
-	"github.com/suisrc/zgo/app/model/ent/demo"
+	"github.com/suisrc/zgo/demo/model/ent/demo"
 )
 
 // Demo is the model entity for the Demo schema.
@@ -20,8 +20,8 @@ type Demo struct {
 	Code string `json:"code,omitempty"`
 	// Name holds the value of the "name" field.
 	Name string `json:"name,omitempty"`
-	// Demo holds the value of the "demo" field.
-	Demo string `json:"demo,omitempty"`
+	// Memo holds the value of the "memo" field.
+	Memo string `json:"memo,omitempty"`
 	// Status holds the value of the "status" field.
 	Status int `json:"status,omitempty"`
 	// Creator holds the value of the "creator" field.
@@ -30,8 +30,8 @@ type Demo struct {
 	Updator string `json:"updator,omitempty"`
 	// CreatedAt holds the value of the "created_at" field.
 	CreatedAt time.Time `json:"created_at,omitempty"`
-	// UpadtedAt holds the value of the "upadted_at" field.
-	UpadtedAt time.Time `json:"upadted_at,omitempty"`
+	// UpdatedAt holds the value of the "updated_at" field.
+	UpdatedAt time.Time `json:"updated_at,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the DemoQuery when eager-loading is set.
 	Edges         DemoEdges `json:"edges"`
@@ -78,12 +78,12 @@ func (*Demo) scanValues() []interface{} {
 		&sql.NullInt64{},  // id
 		&sql.NullString{}, // code
 		&sql.NullString{}, // name
-		&sql.NullString{}, // demo
+		&sql.NullString{}, // memo
 		&sql.NullInt64{},  // status
 		&sql.NullString{}, // creator
 		&sql.NullString{}, // updator
 		&sql.NullTime{},   // created_at
-		&sql.NullTime{},   // upadted_at
+		&sql.NullTime{},   // updated_at
 	}
 }
 
@@ -117,9 +117,9 @@ func (d *Demo) assignValues(values ...interface{}) error {
 		d.Name = value.String
 	}
 	if value, ok := values[2].(*sql.NullString); !ok {
-		return fmt.Errorf("unexpected type %T for field demo", values[2])
+		return fmt.Errorf("unexpected type %T for field memo", values[2])
 	} else if value.Valid {
-		d.Demo = value.String
+		d.Memo = value.String
 	}
 	if value, ok := values[3].(*sql.NullInt64); !ok {
 		return fmt.Errorf("unexpected type %T for field status", values[3])
@@ -142,9 +142,9 @@ func (d *Demo) assignValues(values ...interface{}) error {
 		d.CreatedAt = value.Time
 	}
 	if value, ok := values[7].(*sql.NullTime); !ok {
-		return fmt.Errorf("unexpected type %T for field upadted_at", values[7])
+		return fmt.Errorf("unexpected type %T for field updated_at", values[7])
 	} else if value.Valid {
-		d.UpadtedAt = value.Time
+		d.UpdatedAt = value.Time
 	}
 	values = values[8:]
 	if len(values) == len(demo.ForeignKeys) {
@@ -195,8 +195,8 @@ func (d *Demo) String() string {
 	builder.WriteString(d.Code)
 	builder.WriteString(", name=")
 	builder.WriteString(d.Name)
-	builder.WriteString(", demo=")
-	builder.WriteString(d.Demo)
+	builder.WriteString(", memo=")
+	builder.WriteString(d.Memo)
 	builder.WriteString(", status=")
 	builder.WriteString(fmt.Sprintf("%v", d.Status))
 	builder.WriteString(", creator=")
@@ -205,8 +205,8 @@ func (d *Demo) String() string {
 	builder.WriteString(d.Updator)
 	builder.WriteString(", created_at=")
 	builder.WriteString(d.CreatedAt.Format(time.ANSIC))
-	builder.WriteString(", upadted_at=")
-	builder.WriteString(d.UpadtedAt.Format(time.ANSIC))
+	builder.WriteString(", updated_at=")
+	builder.WriteString(d.UpdatedAt.Format(time.ANSIC))
 	builder.WriteByte(')')
 	return builder.String()
 }

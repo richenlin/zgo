@@ -14,8 +14,6 @@ type Tx struct {
 	config
 	// Account is the client for interacting with the Account builders.
 	Account *AccountClient
-	// Demo is the client for interacting with the Demo builders.
-	Demo *DemoClient
 	// Menu is the client for interacting with the Menu builders.
 	Menu *MenuClient
 	// Resource is the client for interacting with the Resource builders.
@@ -160,7 +158,6 @@ func (tx *Tx) Client() *Client {
 
 func (tx *Tx) init() {
 	tx.Account = NewAccountClient(tx.config)
-	tx.Demo = NewDemoClient(tx.config)
 	tx.Menu = NewMenuClient(tx.config)
 	tx.Resource = NewResourceClient(tx.config)
 	tx.Role = NewRoleClient(tx.config)

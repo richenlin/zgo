@@ -15,7 +15,6 @@ var ServiceSet = wire.NewSet(
 	sqlxc.NewClient,
 	wire.Struct(new(GPA), "*"),
 	// 服务
-	wire.Struct(new(Demo), "*"),
 )
 
 //======================================
@@ -24,7 +23,7 @@ var ServiceSet = wire.NewSet(
 
 // ResultRef 返回值暂存器
 type ResultRef struct {
-	Data interface{}
+	D interface{}
 }
 
 // GPA golang persistence api 数据持久化

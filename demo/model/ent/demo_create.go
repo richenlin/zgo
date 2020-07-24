@@ -10,7 +10,7 @@ import (
 
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
-	"github.com/suisrc/zgo/app/model/ent/demo"
+	"github.com/suisrc/zgo/demo/model/ent/demo"
 )
 
 // DemoCreate is the builder for creating a Demo entity.
@@ -32,9 +32,9 @@ func (dc *DemoCreate) SetName(s string) *DemoCreate {
 	return dc
 }
 
-// SetDemo sets the demo field.
-func (dc *DemoCreate) SetDemo(s string) *DemoCreate {
-	dc.mutation.SetDemo(s)
+// SetMemo sets the memo field.
+func (dc *DemoCreate) SetMemo(s string) *DemoCreate {
+	dc.mutation.SetMemo(s)
 	return dc
 }
 
@@ -44,9 +44,25 @@ func (dc *DemoCreate) SetStatus(i int) *DemoCreate {
 	return dc
 }
 
+// SetNillableStatus sets the status field if the given value is not nil.
+func (dc *DemoCreate) SetNillableStatus(i *int) *DemoCreate {
+	if i != nil {
+		dc.SetStatus(*i)
+	}
+	return dc
+}
+
 // SetCreator sets the creator field.
 func (dc *DemoCreate) SetCreator(s string) *DemoCreate {
 	dc.mutation.SetCreator(s)
+	return dc
+}
+
+// SetNillableCreator sets the creator field if the given value is not nil.
+func (dc *DemoCreate) SetNillableCreator(s *string) *DemoCreate {
+	if s != nil {
+		dc.SetCreator(*s)
+	}
 	return dc
 }
 
@@ -56,15 +72,39 @@ func (dc *DemoCreate) SetUpdator(s string) *DemoCreate {
 	return dc
 }
 
+// SetNillableUpdator sets the updator field if the given value is not nil.
+func (dc *DemoCreate) SetNillableUpdator(s *string) *DemoCreate {
+	if s != nil {
+		dc.SetUpdator(*s)
+	}
+	return dc
+}
+
 // SetCreatedAt sets the created_at field.
 func (dc *DemoCreate) SetCreatedAt(t time.Time) *DemoCreate {
 	dc.mutation.SetCreatedAt(t)
 	return dc
 }
 
-// SetUpadtedAt sets the upadted_at field.
-func (dc *DemoCreate) SetUpadtedAt(t time.Time) *DemoCreate {
-	dc.mutation.SetUpadtedAt(t)
+// SetNillableCreatedAt sets the created_at field if the given value is not nil.
+func (dc *DemoCreate) SetNillableCreatedAt(t *time.Time) *DemoCreate {
+	if t != nil {
+		dc.SetCreatedAt(*t)
+	}
+	return dc
+}
+
+// SetUpdatedAt sets the updated_at field.
+func (dc *DemoCreate) SetUpdatedAt(t time.Time) *DemoCreate {
+	dc.mutation.SetUpdatedAt(t)
+	return dc
+}
+
+// SetNillableUpdatedAt sets the updated_at field if the given value is not nil.
+func (dc *DemoCreate) SetNillableUpdatedAt(t *time.Time) *DemoCreate {
+	if t != nil {
+		dc.SetUpdatedAt(*t)
+	}
 	return dc
 }
 
@@ -115,11 +155,12 @@ func (dc *DemoCreate) Save(ctx context.Context) (*Demo, error) {
 	if _, ok := dc.mutation.Name(); !ok {
 		return nil, &ValidationError{Name: "name", err: errors.New("ent: missing required field \"name\"")}
 	}
-	if _, ok := dc.mutation.Demo(); !ok {
-		return nil, &ValidationError{Name: "demo", err: errors.New("ent: missing required field \"demo\"")}
+	if _, ok := dc.mutation.Memo(); !ok {
+		return nil, &ValidationError{Name: "memo", err: errors.New("ent: missing required field \"memo\"")}
 	}
 	if _, ok := dc.mutation.Status(); !ok {
-		return nil, &ValidationError{Name: "status", err: errors.New("ent: missing required field \"status\"")}
+		v := demo.DefaultStatus
+		dc.mutation.SetStatus(v)
 	}
 	if v, ok := dc.mutation.Status(); ok {
 		if err := demo.StatusValidator(v); err != nil {
@@ -127,16 +168,20 @@ func (dc *DemoCreate) Save(ctx context.Context) (*Demo, error) {
 		}
 	}
 	if _, ok := dc.mutation.Creator(); !ok {
-		return nil, &ValidationError{Name: "creator", err: errors.New("ent: missing required field \"creator\"")}
+		v := demo.DefaultCreator
+		dc.mutation.SetCreator(v)
 	}
 	if _, ok := dc.mutation.Updator(); !ok {
-		return nil, &ValidationError{Name: "updator", err: errors.New("ent: missing required field \"updator\"")}
+		v := demo.DefaultUpdator
+		dc.mutation.SetUpdator(v)
 	}
 	if _, ok := dc.mutation.CreatedAt(); !ok {
-		return nil, &ValidationError{Name: "created_at", err: errors.New("ent: missing required field \"created_at\"")}
+		v := demo.DefaultCreatedAt()
+		dc.mutation.SetCreatedAt(v)
 	}
-	if _, ok := dc.mutation.UpadtedAt(); !ok {
-		return nil, &ValidationError{Name: "upadted_at", err: errors.New("ent: missing required field \"upadted_at\"")}
+	if _, ok := dc.mutation.UpdatedAt(); !ok {
+		v := demo.DefaultUpdatedAt()
+		dc.mutation.SetUpdatedAt(v)
 	}
 	var (
 		err  error
@@ -214,13 +259,13 @@ func (dc *DemoCreate) createSpec() (*Demo, *sqlgraph.CreateSpec) {
 		})
 		d.Name = value
 	}
-	if value, ok := dc.mutation.Demo(); ok {
+	if value, ok := dc.mutation.Memo(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: demo.FieldDemo,
+			Column: demo.FieldMemo,
 		})
-		d.Demo = value
+		d.Memo = value
 	}
 	if value, ok := dc.mutation.Status(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -254,13 +299,13 @@ func (dc *DemoCreate) createSpec() (*Demo, *sqlgraph.CreateSpec) {
 		})
 		d.CreatedAt = value
 	}
-	if value, ok := dc.mutation.UpadtedAt(); ok {
+	if value, ok := dc.mutation.UpdatedAt(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeTime,
 			Value:  value,
-			Column: demo.FieldUpadtedAt,
+			Column: demo.FieldUpdatedAt,
 		})
-		d.UpadtedAt = value
+		d.UpdatedAt = value
 	}
 	if nodes := dc.mutation.ParentIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

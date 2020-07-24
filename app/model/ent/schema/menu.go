@@ -1,8 +1,5 @@
 package schema
 
-/*
-  菜单
-*/
 import "github.com/facebookincubator/ent"
 
 // Menu holds the schema definition for the Menu entity.
