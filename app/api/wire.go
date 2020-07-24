@@ -51,7 +51,7 @@ type Endpoints struct {
 // InitEndpoints init
 func InitEndpoints(o *Options) *Endpoints {
 	// 在根路由注册通用授权接口, (没有ContextPath限定,一般是给nginx使用)
-	// 在nginx注册认证接口时候,请放行zgo服务器接口,防止重复认证
+	// 在nginx注册认证接口时候,请放行zgo服务器其他接口,防止重复认证
 	o.Auth.Register(o.Engine)
 
 	// ContextPath路由
@@ -60,8 +60,12 @@ func InitEndpoints(o *Options) *Endpoints {
 	uac := middleware.UserAuthCasbinMiddleware(
 		o.Auther,
 		o.Enforcer,
-		// sign 登陆接口需要排除
-		middleware.AllowPathPrefixSkipper(middleware.JoinPath(config.C.HTTP.ContextPath, "sign")),
+		middleware.AllowPathPrefixSkipper(
+			// sign 登陆接口需要排除
+			middleware.JoinPath(config.C.HTTP.ContextPath, "sign"),
+			// pub => public 为系统公共信息
+			middleware.JoinPath(config.C.HTTP.ContextPath, "pub"),
+		),
 	)
 	// 增加权限认证
 	r.Use(uac)
@@ -70,16 +74,4 @@ func InitEndpoints(o *Options) *Endpoints {
 	o.User.Register(r)
 
 	return &Endpoints{}
-}
-
-//=====================================
-// v1 router
-//=====================================
-
-// V1Router v1 path
-type V1Router gin.IRouter
-
-// V1RouterFunc  v1 path
-func V1RouterFunc(r middlewire.Router) V1Router {
-	return r.Group("v1")
 }
