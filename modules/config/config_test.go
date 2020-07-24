@@ -8,6 +8,8 @@ import (
 )
 
 func TestConfig(t *testing.T) {
-	log.Println("ok")
-	assert.NotNil(t, nil)
+	log.Println("===========================loading")
+	MustLoad("../../configs/config.toml")
+	PrintWithJSON()
+	assert.NotNil(t, nil) // 异常才能显示日志
 }

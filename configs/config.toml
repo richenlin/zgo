@@ -1,13 +1,16 @@
 # 运行模式(debug:调试,test:测试,release:正式)
-RunMode = "debug"
+runmode = "debug"
 
 # 是否启用swagger
-Swagger = false
+swagger = false
 
 # 启动时是否打印配置参数
-PrintConfig = true
+printconfig = false
 
-[Casbin]
-Enable = true
-Model = "./configs/rbac_restful.conf"
-PolicySource = "./configs/rbac_policy.json"
+[casbin]
+enable = true
+model = "./configs/rbac_restful.conf"
+policysource = "./configs/rbac_policy.json"
+
+[http]
+port = 80

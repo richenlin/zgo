@@ -11,7 +11,7 @@ var (
 
 // Config 配置参数
 type Config struct {
-	RunMode      string
+	RunMode      string `default:"release"`
 	Swagger      bool
 	PrintConfig  bool
 	HTTP         HTTP
@@ -42,13 +42,13 @@ type MiddleConfig struct {
 
 // HTTP http配置参数
 type HTTP struct {
-	Host             string //`yaml:"zgo,http,host"`
-	Port             int    //`yaml:"zgo,http,port"`
+	Host             string `default:"0.0.0.0"`
+	Port             int    `default:"80"`
 	CertFile         string
 	KeyFile          string
 	ShutdownTimeout  int
 	MaxContentLength int64
-	ContextPath      string
+	ContextPath      string `default:"api"`
 	Prefixes         []string
 }
 
@@ -66,12 +66,12 @@ type Casbin struct {
 
 // Logging 日志配置参数
 type Logging struct {
-	Level            string
+	Level            string `default:"info"`
 	Format           string // json | text
 	Output           string
 	OutputFile       string
 	EnableSyslogHook bool
-	SyslogNetwork    string
+	SyslogNetwork    string `default:"udp"`
 	SyslogAddr       string
 	SyslogTag        string
 	//SyslogPriority   int
@@ -121,8 +121,8 @@ type Redis struct {
 
 // WWW 静态资源
 type WWW struct {
-	Index   string
-	RootDir string
+	Index   string `default:"index.html"`
+	RootDir string `default:"www"`
 }
 
 //===============================================分割线

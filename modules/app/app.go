@@ -107,7 +107,7 @@ func RunServer(ctx context.Context, opts ...Option) (func(), error) {
 	SetVersion(o.Version)
 	// 加载配置文件
 	config.MustLoad(o.ConfigFile)
-	config.PrintWithJSON()
+	config.Print()
 
 	// 启动日志
 	logger.Printf(ctx, "http server startup, M[%s]-V[%s]-P[%d]", config.C.RunMode, o.Version, os.Getpid())
