@@ -6,8 +6,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/suisrc/zgo/demo/model/ent"
-	sqlxm "github.com/suisrc/zgo/demo/model/sqlx"
 	"github.com/suisrc/zgo/demo/model/sqlxc"
+	"github.com/suisrc/zgo/demo/model/sqlxm"
 	"github.com/suisrc/zgo/demo/schema"
 	"github.com/suisrc/zgo/demo/service"
 	"github.com/suisrc/zgo/modules/helper"
