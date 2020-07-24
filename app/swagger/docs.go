@@ -28,6 +28,29 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/auth": {
+            "get": {
+                "description": "授权接口",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Authorize",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/helper.Success"
+                        }
+                    }
+                }
+            }
+        },
         "/demo/get": {
             "get": {
                 "description": "Get",
@@ -36,6 +59,9 @@ var doc = `{
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "demo"
                 ],
                 "summary": "Get",
                 "parameters": [
@@ -66,6 +92,9 @@ var doc = `{
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "demo"
+                ],
                 "summary": "Get",
                 "parameters": [
                     {
@@ -95,6 +124,9 @@ var doc = `{
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "demo"
+                ],
                 "summary": "Hello",
                 "responses": {
                     "200": {
@@ -115,6 +147,9 @@ var doc = `{
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "demo"
+                ],
                 "summary": "Set",
                 "parameters": [
                     {
@@ -131,6 +166,75 @@ var doc = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/helper.ErrorInfo"
+                        }
+                    }
+                }
+            }
+        },
+        "/signin": {
+            "post": {
+                "description": "登陆",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "sign"
+                ],
+                "summary": "Signin",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/helper.Success"
+                        }
+                    }
+                }
+            }
+        },
+        "/signout": {
+            "get": {
+                "description": "登出",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "sign"
+                ],
+                "summary": "Signin",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/helper.Success"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/hello": {
+            "get": {
+                "description": "用户接口测试",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "hello",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/helper.Success"
                         }
                     }
                 }
@@ -156,6 +260,23 @@ var doc = `{
                 "showType": {
                     "description": "错误显示类型：0静音； 1条消息警告； 2消息错误； 4通知； 9页",
                     "type": "integer"
+                },
+                "success": {
+                    "description": "请求成功, false",
+                    "type": "boolean"
+                },
+                "traceId": {
+                    "description": "方便进行后端故障排除：唯一的请求ID",
+                    "type": "string"
+                }
+            }
+        },
+        "helper.Success": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "description": "响应数据",
+                    "type": "object"
                 },
                 "success": {
                     "description": "请求成功, false",

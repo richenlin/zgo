@@ -26,11 +26,22 @@ func BuildInjector() (*Injector, func(), error) {
 	if err != nil {
 		return nil, nil, err
 	}
+	auther := api.NewAuther()
 	router := middlewire.NewRouter(engine)
+	auth := &api.Auth{
+		Enforcer: syncedEnforcer,
+		Auther:   auther,
+	}
+	signin := &api.Signin{}
+	user := &api.User{}
 	options := &api.Options{
 		Engine:   engine,
 		Enforcer: syncedEnforcer,
+		Auther:   auther,
 		Router:   router,
+		Auth:     auth,
+		Signin:   signin,
+		User:     user,
 	}
 	endpoints := api.InitEndpoints(options)
 	swagger := middlewire.NewSwagger(engine)

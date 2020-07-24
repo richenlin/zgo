@@ -96,7 +96,7 @@ type GZIP struct {
 
 // JWTAuth 用户认证
 type JWTAuth struct {
-	Enable        bool
+	Enable        bool `default:"true"`
 	SigningMethod string
 	SigningKey    string
 	Expired       int

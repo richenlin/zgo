@@ -21,6 +21,18 @@ definitions:
         description: 方便进行后端故障排除：唯一的请求ID
         type: string
     type: object
+  helper.Success:
+    properties:
+      data:
+        description: 响应数据
+        type: object
+      success:
+        description: 请求成功, false
+        type: boolean
+      traceId:
+        description: 方便进行后端故障排除：唯一的请求ID
+        type: string
+    type: object
   schema.DemoSet:
     properties:
       code:
@@ -45,6 +57,21 @@ info:
   title: zgo
   version: 0.0.1
 paths:
+  /auth:
+    get:
+      consumes:
+      - application/json
+      description: 授权接口
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/helper.Success'
+      summary: Authorize
+      tags:
+      - auth
   /demo/get:
     get:
       consumes:
@@ -64,6 +91,8 @@ paths:
           schema:
             $ref: '#/definitions/helper.ErrorInfo'
       summary: Get
+      tags:
+      - demo
   /demo/get1:
     get:
       consumes:
@@ -83,6 +112,8 @@ paths:
           schema:
             $ref: '#/definitions/helper.ErrorInfo'
       summary: Get
+      tags:
+      - demo
   /demo/hello:
     get:
       consumes:
@@ -96,6 +127,8 @@ paths:
           schema:
             type: string
       summary: Hello
+      tags:
+      - demo
   /demo/set:
     post:
       consumes:
@@ -115,6 +148,53 @@ paths:
           schema:
             $ref: '#/definitions/helper.ErrorInfo'
       summary: Set
+      tags:
+      - demo
+  /signin:
+    post:
+      consumes:
+      - application/json
+      description: 登陆
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/helper.Success'
+      summary: Signin
+      tags:
+      - sign
+  /signout:
+    get:
+      consumes:
+      - application/json
+      description: 登出
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/helper.Success'
+      summary: Signin
+      tags:
+      - sign
+  /user/hello:
+    get:
+      consumes:
+      - application/json
+      description: 用户接口测试
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/helper.Success'
+      summary: hello
+      tags:
+      - user
 schemes:
 - https
 - http

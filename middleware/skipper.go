@@ -57,6 +57,24 @@ func AllowMethodAndPathPrefixSkipper(prefixes ...string) SkipperFunc {
 	}
 }
 
+// JoinPath 拼接路由
+func JoinPath(paths ...string) string {
+	path := "/"
+	for _, p := range paths {
+		if lr := len(p); lr > 0 {
+			ll := len(path)
+			if p[0] == '/' && path[ll-1] == '/' {
+				path += p[1:]
+			} else if p[0] != '/' && path[ll-1] != '/' {
+				path += "/" + p
+			} else {
+				path += p
+			}
+		}
+	}
+	return path
+}
+
 // JoinRouter 拼接路由
 func JoinRouter(method, path string) string {
 	if len(path) > 0 && path[0] != '/' {

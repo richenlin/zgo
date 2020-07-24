@@ -28,6 +28,7 @@ func (a *Demo) Register(r gin.IRouter) {
 }
 
 // Hello godoc
+// @Tags demo
 // @Summary Hello
 // @Description Hello world
 // @Accept  json
@@ -41,6 +42,7 @@ func (a *Demo) Hello(c *gin.Context) {
 }
 
 // Set godoc
+// @Tags demo
 // @Summary Set
 // @Description Set
 // @Accept  json
@@ -69,6 +71,7 @@ func (a *Demo) Set(c *gin.Context) {
 }
 
 // Get godoc
+// @Tags demo
 // @Summary Get
 // @Description Get
 // @Accept  json
@@ -97,6 +100,7 @@ func (a *Demo) Get(c *gin.Context) {
 }
 
 // Get1 godoc
+// @Tags demo
 // @Summary Get
 // @Description Get
 // @Accept  json
