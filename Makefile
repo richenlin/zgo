@@ -30,7 +30,8 @@ build:
 # 调试过程中,会产生一些僵尸进程,这个时候,可以通过杀死父进程解决
 # ps -ef | grep defunct | more (kill -9 pid 是无法删除进程)
 debug:
-	dlv debug --log --headless --api-version=2 --listen=127.0.0.1:2345 cmd/app/main.go -- web -c ./configs/config.toml
+	dlv debug --headless --api-version=2 --listen=127.0.0.1:2345 cmd/app/main.go -- web -c ./configs/config.toml
+	#echo c | dlv debug --accept-multiclient --api-version=2 --listen=127.0.0.1:2345 cmd/app/main.go -- web -c ./configs/config.toml
 
 start:
 	go run cmd/app/main.go web -c ./configs/config.toml

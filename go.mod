@@ -9,10 +9,13 @@ require (
 	github.com/casbin/casbin/v2 v2.8.6
 	github.com/casbin/json-adapter/v2 v2.0.0
 	github.com/casbin/redis-adapter/v2 v2.0.1
+	github.com/cosmtrek/air v1.12.1 // indirect
+	github.com/creack/pty v1.1.11 // indirect
 	github.com/denisenkom/go-mssqldb v0.0.0-20200620013148-b91950f658ec
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/facebookincubator/ent v0.2.7
 	github.com/fatih/camelcase v1.0.0 // indirect
+	github.com/fatih/color v1.9.0 // indirect
 	github.com/fatih/structs v1.1.0
 	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-gonic/gin v1.6.3
@@ -25,14 +28,17 @@ require (
 	github.com/google/uuid v1.1.1
 	github.com/google/wire v0.4.0
 	github.com/guonaihong/gout v0.1.1
+	github.com/imdario/mergo v0.3.10 // indirect
 	github.com/jmoiron/sqlx v1.2.0
 	github.com/json-iterator/go v1.1.10
 	github.com/koding/multiconfig v0.0.0-20171124222453-69c27309b2d7
 	github.com/lib/pq v1.7.0
 	github.com/mailru/easyjson v0.7.2 // indirect
+	github.com/mattn/go-colorable v0.1.7 // indirect
 	github.com/mattn/go-sqlite3 v1.14.0
 	github.com/memwey/casbin-sqlx-adapter v0.2.0
 	github.com/onsi/ginkgo v1.14.0 // indirect
+	github.com/pelletier/go-toml v1.8.0 // indirect
 	github.com/pkg/errors v0.9.1
 	github.com/sirupsen/logrus v1.6.0
 	github.com/stretchr/testify v1.5.1
@@ -41,6 +47,7 @@ require (
 	github.com/tidwall/buntdb v1.1.2
 	github.com/urfave/cli/v2 v2.2.0
 	golang.org/x/net v0.0.0-20200707034311-ab3426394381 // indirect
+	golang.org/x/sys v0.0.0-20200728102440-3e129f6d46b1 // indirect
 	golang.org/x/time v0.0.0-20200630173020-3af7569d3a1e
 	golang.org/x/tools v0.0.0-20200729194436-6467de6f59a7 // indirect
 	xorm.io/xorm v1.0.3

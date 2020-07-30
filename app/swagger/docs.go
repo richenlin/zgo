@@ -235,6 +235,11 @@ var doc = `{
         },
         "/user/hello": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "用户接口测试",
                 "consumes": [
                     "application/json"

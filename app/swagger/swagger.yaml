@@ -230,6 +230,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/helper.Success'
+      security:
+      - ApiKeyAuth: []
       summary: hello
       tags:
       - user
