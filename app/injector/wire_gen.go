@@ -32,7 +32,9 @@ func BuildInjector() (*Injector, func(), error) {
 		Enforcer: syncedEnforcer,
 		Auther:   auther,
 	}
-	signin := &api.Signin{}
+	signin := &api.Signin{
+		Auther: auther,
+	}
 	user := &api.User{}
 	options := &api.Options{
 		Engine:   engine,

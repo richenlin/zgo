@@ -99,6 +99,7 @@ type JWTAuth struct {
 	Enable        bool `default:"true"`
 	SigningMethod string
 	SigningKey    string
+	SigningSecret string
 	Expired       int
 	Store         string
 	FilePath      string

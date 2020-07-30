@@ -3,6 +3,8 @@ package auth
 import (
 	"context"
 	"errors"
+
+	"github.com/NebulousLabs/fastrand"
 )
 
 // 定义错误
@@ -58,4 +60,19 @@ type Auther interface {
 
 	// DestroyToken 销毁令牌
 	DestroyToken(c context.Context, u UserInfo) error
+}
+
+// UUID uuid
+func UUID(length int64) string {
+	ele := []string{"0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
+		"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n",
+		"o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"}
+
+	elen := len(ele)
+	uuid := ""
+	var i int64
+	for i = 0; i < length; i++ {
+		uuid += ele[fastrand.Intn(elen)]
+	}
+	return uuid
 }

@@ -5,9 +5,8 @@ package jwt
 */
 import (
 	"context"
+	"errors"
 	"time"
-
-	"github.com/NebulousLabs/fastrand"
 
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/suisrc/zgo/modules/auth"
@@ -125,6 +124,10 @@ func (a *Auther) GetUserInfo(c context.Context) (auth.UserInfo, error) {
 
 	claims, err := a.parseToken(tokenString)
 	if err != nil {
+		var e *jwt.ValidationError
+		if errors.As(err, &e) {
+			return nil, auth.ErrInvalidToken
+		}
 		return nil, err
 	}
 
@@ -150,13 +153,7 @@ func (a *Auther) GenerateToken(c context.Context, user auth.UserInfo) (auth.Toke
 	expiresAt := now.Add(time.Duration(a.opts.expired) * time.Second).Unix()
 	issuedAt := now.Unix()
 
-	tokenID := user.GetTokenID()
-	if tokenID == "" {
-		tokenID = NewRandomID()
-	}
-
 	claims := NewUserInfo(user)
-	claims.Id = tokenID
 	claims.IssuedAt = issuedAt
 	claims.NotBefore = issuedAt
 	claims.ExpiresAt = expiresAt
@@ -263,20 +260,5 @@ func NewRandomID() string {
 	// }
 	// strid := uuid.String()
 	// return strid
-	return UUID(32)
-}
-
-// UUID uuid
-func UUID(length int64) string {
-	ele := []string{"0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
-		"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n",
-		"o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"}
-
-	elen := len(ele)
-	uuid := ""
-	var i int64
-	for i = 0; i < length; i++ {
-		uuid += ele[fastrand.Intn(elen)]
-	}
-	return uuid
+	return auth.UUID(32)
 }

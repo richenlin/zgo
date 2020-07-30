@@ -1,31 +1,21 @@
 [
   {
     "PType": "p",
-    "V0": "alice",
-    "V1": "data1",
-    "V2": "read"
+    "V0": "basic",
+    "V1": "/*",
+    "V2": "(GET)|(POST)|(DELETE)|(PUT)",
+    "V3": "allow"
   },
   {
     "PType": "p",
-    "V0": "bob",
-    "V1": "data2",
-    "V2": "write"
-  },
-  {
-    "PType": "p",
-    "V0": "data2_admin",
-    "V1": "data2",
-    "V2": "read"
-  },
-  {
-    "PType": "p",
-    "V0": "data2_admin",
-    "V1": "data2",
-    "V2": "write"
+    "V0": "basic",
+    "V1": "/authz",
+    "V2": "GET",
+    "V3": "deny"
   },
   {
     "PType": "g",
-    "V0": "alice",
-    "V1": "data2_admin"
+    "V0": "all",
+    "V1": "basic"
   }
 ]

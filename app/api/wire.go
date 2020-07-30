@@ -52,24 +52,29 @@ type Endpoints struct {
 func InitEndpoints(o *Options) *Endpoints {
 	// 在根路由注册通用授权接口, (没有ContextPath限定,一般是给nginx使用)
 	// 在nginx注册认证接口时候,请放行zgo服务器其他接口,防止重复认证
-	o.Auth.Register(o.Engine)
+	o.Auth.RegisterWithUAC(o.Engine)
 
 	// ContextPath路由
 	r := o.Router
+
 	// 服务器授权控制器
 	uac := middleware.UserAuthCasbinMiddleware(
 		o.Auther,
 		o.Enforcer,
 		middleware.AllowPathPrefixSkipper(
 			// sign 登陆接口需要排除
+			// 注意[/api/sign开头的,都会被排除]
 			middleware.JoinPath(config.C.HTTP.ContextPath, "sign"),
 			// pub => public 为系统公共信息
+			// 注意[/api/pub开头的,都会被排除]
 			middleware.JoinPath(config.C.HTTP.ContextPath, "pub"),
 		),
 	)
 	// 增加权限认证
 	r.Use(uac)
+
 	// 注册登陆接口
+	o.Auth.Register(r)
 	o.Signin.Register(r)
 	o.User.Register(r)
 

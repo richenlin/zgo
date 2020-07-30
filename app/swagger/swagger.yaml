@@ -48,6 +48,35 @@ definitions:
     - code
     - name
     type: object
+  schema.SigninBody:
+    properties:
+      captcha:
+        description: 验证码
+        type: string
+      code:
+        description: 登陆方式
+        type: string
+      mobile:
+        description: 手机号
+        type: string
+      password:
+        description: 密码
+        type: string
+      reset:
+        description: 重置登陆
+        type: boolean
+      role:
+        description: 角色
+        type: string
+      type:
+        description: 登陆类型 <系统>:<类型>:<备注>
+        type: string
+      usrname:
+        description: 账户
+        type: string
+    required:
+    - usrname
+    type: object
 info:
   contact:
     email: susirc@outlook.com
@@ -57,7 +86,7 @@ info:
   title: zgo
   version: 0.0.1
 paths:
-  /auth:
+  /authz:
     get:
       consumes:
       - application/json
@@ -69,6 +98,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/helper.Success'
+      security:
+      - ApiKeyAuth: []
       summary: Authorize
       tags:
       - auth
@@ -155,6 +186,13 @@ paths:
       consumes:
       - application/json
       description: 登陆
+      parameters:
+      - description: SigninBody Info
+        in: body
+        name: item
+        required: true
+        schema:
+          $ref: '#/definitions/schema.SigninBody'
       produces:
       - application/json
       responses:

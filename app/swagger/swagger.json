@@ -16,8 +16,13 @@
     },
     "basePath": "/api",
     "paths": {
-        "/auth": {
+        "/authz": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "授权接口",
                 "consumes": [
                     "application/json"
@@ -172,6 +177,17 @@
                     "sign"
                 ],
                 "summary": "Signin",
+                "parameters": [
+                    {
+                        "description": "SigninBody Info",
+                        "name": "item",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/schema.SigninBody"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -293,6 +309,46 @@
                 },
                 "name": {
                     "description": "名称",
+                    "type": "string"
+                }
+            }
+        },
+        "schema.SigninBody": {
+            "type": "object",
+            "required": [
+                "usrname"
+            ],
+            "properties": {
+                "captcha": {
+                    "description": "验证码",
+                    "type": "string"
+                },
+                "code": {
+                    "description": "登陆方式",
+                    "type": "string"
+                },
+                "mobile": {
+                    "description": "手机号",
+                    "type": "string"
+                },
+                "password": {
+                    "description": "密码",
+                    "type": "string"
+                },
+                "reset": {
+                    "description": "重置登陆",
+                    "type": "boolean"
+                },
+                "role": {
+                    "description": "角色",
+                    "type": "string"
+                },
+                "type": {
+                    "description": "登陆类型 \u003c系统\u003e:\u003c类型\u003e:\u003c备注\u003e",
+                    "type": "string"
+                },
+                "usrname": {
+                    "description": "账户",
                     "type": "string"
                 }
             }

@@ -9,8 +9,14 @@ import (
 func NewUserInfo(user auth.UserInfo) *UserClaims {
 	claims := UserClaims{}
 
-	claims.Id = user.GetTokenID()
+	tokenID := user.GetTokenID()
+	if tokenID == "" {
+		tokenID = NewRandomID()
+	}
+
+	claims.Id = tokenID
 	claims.Subject = user.GetUserID()
+	claims.Name = user.GetUserName()
 	claims.Role = user.GetRoleID()
 
 	claims.Issuer = user.GetIssuer()
@@ -41,7 +47,7 @@ func (u *UserClaims) GetUserID() string {
 
 // GetRoleID role
 func (u *UserClaims) GetRoleID() string {
-	return u.Subject
+	return u.Role
 }
 
 // GetTokenID token

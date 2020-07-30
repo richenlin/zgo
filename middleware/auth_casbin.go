@@ -37,10 +37,10 @@ func UserAuthCasbinMiddleware(auther auth.Auther, enforcer *casbin.SyncedEnforce
 			p := c.Request.URL.Path
 			m := c.Request.Method
 			if b, err := enforcer.Enforce(r, p, m); err != nil {
-				helper.ResError(c, &helper.Err401Unauthorized)
+				helper.ResError(c, &helper.Err403Forbidden)
 				return
 			} else if !b {
-				helper.ResError(c, &helper.Err401Unauthorized)
+				helper.ResError(c, &helper.Err403Forbidden)
 				return
 			}
 		}

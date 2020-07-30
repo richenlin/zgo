@@ -14,3 +14,6 @@ policysource = "./configs/rbac_policy.json"
 
 [http]
 port = 80
+
+[jwtauth]
+signingsecret = "12345678"

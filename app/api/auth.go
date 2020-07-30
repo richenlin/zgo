@@ -7,7 +7,9 @@ import (
 	"github.com/suisrc/zgo/modules/auth"
 	"github.com/suisrc/zgo/modules/auth/jwt"
 	"github.com/suisrc/zgo/modules/auth/jwt/store/buntdb"
+	"github.com/suisrc/zgo/modules/config"
 	"github.com/suisrc/zgo/modules/helper"
+	"github.com/suisrc/zgo/modules/logger"
 )
 
 // Auth auth
@@ -16,11 +18,20 @@ type Auth struct {
 	Auther   auth.Auther
 }
 
-// Register 注册路由,认证接口特殊,需要独立注册
-func (a *Auth) Register(r gin.IRouter) {
+// RegisterWithUAC 注册路由,认证接口特殊,需要独立注册
+func (a *Auth) RegisterWithUAC(r gin.IRouter) {
 	uac := middleware.UserAuthCasbinMiddleware(a.Auther, a.Enforcer)
+
 	r.GET("authz", uac, a.authorize)
+	// r.GET(middleware.JoinPath(config.C.HTTP.ContextPath, "authz"), uac, a.authorize)
 }
+
+// Register 主路由必须包含UAC内容
+func (a *Auth) Register(r gin.IRouter) {
+	r.GET("authz", a.authorize)
+}
+
+// @Param Authorization header string true "Bearer token"
 
 // Authorize godoc
 // @Tags auth
@@ -28,10 +39,12 @@ func (a *Auth) Register(r gin.IRouter) {
 // @Description 授权接口
 // @Accept  json
 // @Produce  json
+// @Security ApiKeyAuth
 // @Success 200 {object} helper.Success
-// @Router /auth [get]
+// @Router /authz [get]
 func (a *Auth) authorize(c *gin.Context) {
-	// 返回正常结果即可
+	// 权限判断有UserAuthCasbinMiddleware完成
+	// 仅仅返回正常结果即可
 	helper.ResSuccess(c, "ok")
 }
 
@@ -42,8 +55,13 @@ func NewAuther() auth.Auther {
 	if err != nil {
 		panic(err)
 	}
+	secret := config.C.JWTAuth.SigningSecret
+	if secret == "" {
+		secret = auth.UUID(128)
+		logger.Infof(nil, "jwt secret: %s", secret)
+	}
 	auther := jwt.New(store,
-		jwt.SetSigningSecret("12345678"), // 注册令牌签名密钥
+		jwt.SetSigningSecret(secret), // 注册令牌签名密钥
 	)
 
 	return auther
