@@ -9,7 +9,7 @@
   {
     "PType": "p",
     "V0": "basic",
-    "V1": "/authz",
+    "V1": "/demo",
     "V2": "GET",
     "V3": "deny"
   },

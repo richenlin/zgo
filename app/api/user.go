@@ -22,6 +22,7 @@ func (a *User) Register(r gin.IRouter) {
 // @Description 用户接口测试
 // @Accept  json
 // @Produce  json
+// @Security ApiKeyAuth
 // @Success 200 {object} helper.Success
 // @Router /user/hello [get]
 func (a *User) hello(c *gin.Context) {
